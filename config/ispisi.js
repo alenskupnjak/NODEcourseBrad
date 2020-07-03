@@ -8,6 +8,6 @@ exports.ispisi = (text, status) => {
   if (status === 1) {
     console.log(text.underline.magenta);
   } else {
-    console.log(text.underline.bgRed);
+    console.log(text.underline.red);
   }
 };

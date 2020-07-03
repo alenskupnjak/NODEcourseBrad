@@ -63,11 +63,7 @@ exports.getBootcamp = async (req, res, next) => {
 // @access    Private
 exports.createBootcamp = async (req, res, next) => {
   try {
-    fs.appendFileSync(
-      'message.txt',
-      '02- Kreiranje zapisa, bootcampsCtrl.js\n'
-    );
-    console.log('02- Kreiranje zapisa'.underline.magenta);
+    ispisi('02- Kreiranje zapisa, bootcampsCtrl.js', 1);
 
     const bootcamp = await Bootcamp.create(req.body);
 
@@ -112,10 +108,10 @@ exports.updateBootcamp = async (req, res, next) => {
       data: bootCamps,
     });
   } catch (error) {
-    ispisi('05- UPDATE jednog zapisa, bootcampsCtrl.js', 0);
+    ispisi(`05- UPDATE jednog zapisa, bootcampsCtrl.js` + error, 0);
     res.status(400).json({
       sucess: false,
-      poruka: 'UPDATE jednog zapisa iz baze nije uspjela',
+      poruka: error.message,
     });
   }
   next();
@@ -139,9 +135,8 @@ exports.deleteBootcamp = async (req, res, next) => {
     res.status(200).json({
       sucess: true,
       msg: `Prikaži ${req.params.id}`,
-      data:  deleteBoot
+      poruka: 'Obrisan bootcamp',
     });
-
   } catch (error) {
     ispisi('06- DELETE jednog zapisa, bootcampsCtrl.js', 0);
     res.status(400).json({
