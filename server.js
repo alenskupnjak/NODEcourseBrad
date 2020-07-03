@@ -1,13 +1,13 @@
 const colors = require('colors');
+const { ispisi } = require('./config/ispisi');
 const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
 const logger = require('./middleware/logger');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
-const fs = require('fs');
 
-fs.appendFileSync('message.txt', '-------------Pocetak------------\n');
+ispisi('------ START --------', 1);
 
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });

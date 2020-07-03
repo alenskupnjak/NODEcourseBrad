@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify')
 
 const BootcampSchema = new mongoose.Schema(
   {
@@ -109,5 +110,23 @@ const BootcampSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+// Creatr bootcamp slug from the name
+BootcampSchema.pre('save', function (next) {
+ console.log('Slugify run', this)
+ this.slug = slugify(this.name, {lower: true})
+
+//https://www.npmjs.com/package/slugify
+//  slugify('some string', {
+//   replacement: '-',  // replace spaces with replacement character, defaults to `-`
+//   remove: undefined, // remove characters that match regex, defaults to `undefined`
+//   lower: false,      // convert to lower case, defaults to `false`
+//   strict: false,     // strip special characters except replacement, defaults to `false`
+//   locale: 'vi'       // language code of the locale to use
+// })
+
+ // next je obavezan
+ next();
+})
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
