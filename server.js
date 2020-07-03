@@ -1,4 +1,5 @@
 const colors = require('colors')
+const errorHandlerSvi= require('./middleware/error')
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
 const logger = require('./middleware/logger');
@@ -34,6 +35,10 @@ if (process.env.NODE_ENV === 'development') {
 
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
+
+
+// MIDDLEWARE za greske
+app.use(errorHandlerSvi);
 
 // definiranje porta
 const PORT = process.env.PORT || 5000;

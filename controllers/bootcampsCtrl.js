@@ -50,12 +50,12 @@ exports.getBootcamp = async (req, res, next) => {
     });
   } catch (error) {
     ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
-    res.status(400).json({
-      sucess: false,
-      poruka: 'Očitavanje zapisa iz baze nije uspjela',
-    });
+    next(error);
+    // res.status(400).json({
+    //   sucess: false,
+    //   poruka: 'Očitavanje zapisa iz baze nije uspjelaccc',
+    // });
   }
-  next();
 };
 
 // @desc      Create new bootcamp
