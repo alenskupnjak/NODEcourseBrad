@@ -1,5 +1,7 @@
 const Bootcamp = require('../models/Bootcamps');
 const { ispisi } = require('../config/ispisi');
+const ErrorResponse = require('../utils/errorResponse')
+
 // const fs = require('fs');
 
 // @desc      Get all bootcamps
@@ -37,9 +39,7 @@ exports.getBootcamp = async (req, res, next) => {
     const bootCamps = await Bootcamp.findById(req.params.id);
 
     if (!bootCamps) {
-      return res
-        .status(400)
-        .json({ sucess: false, poruka: 'Nije naso zapis!' });
+      return  next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
     }
     console.log('tutu');
 
@@ -50,7 +50,7 @@ exports.getBootcamp = async (req, res, next) => {
     });
   } catch (error) {
     ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
-    next(error);
+    next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
     // res.status(400).json({
     //   sucess: false,
     //   poruka: 'Očitavanje zapisa iz baze nije uspjelaccc',

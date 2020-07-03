@@ -1,8 +1,8 @@
 const errorHandlerSvi = (err, req, res, next) => {
   console.log(err.stack.red);
-  res.status(500).json({
-    sucess: false,
-    error: err.message,
+  res.status(err.statusCode || 500).json({
+    sucess: 'neuspjelo',
+    error: err.message || 'Server error'
   });
 };
 
