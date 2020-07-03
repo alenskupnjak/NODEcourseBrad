@@ -1,5 +1,5 @@
-const colors = require('colors')
-const errorHandlerSvi= require('./middleware/error')
+const colors = require('colors');
+const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
 const logger = require('./middleware/logger');
@@ -9,11 +9,10 @@ const fs = require('fs');
 
 fs.appendFileSync('message.txt', '-------------Pocetak------------\n');
 
-
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
 
-// Connect to database 
+// Connect to database
 connectDB();
 
 // Route files
@@ -36,7 +35,6 @@ if (process.env.NODE_ENV === 'development') {
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
 
-
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);
 
@@ -50,10 +48,10 @@ const server = app.listen(PORT, () => {
 });
 
 // zatvar program
-process.on('unhandledRejection', (err, promise)=>{
+process.on('unhandledRejection', (err, promise) => {
   console.log(`Error: ${err.message}`.bgRed);
   // Close server an exit process
-  server.close(()=>{
-    process.exit(1)
-  })
-})
+  server.close(() => {
+    process.exit(1);
+  });
+});

@@ -1,14 +1,15 @@
 const Bootcamp = require('../models/Bootcamps');
+const asyncHandler = require('../middleware/async')
 const { ispisi } = require('../config/ispisi');
-const ErrorResponse = require('../utils/errorResponse')
+const ErrorResponse = require('../utils/errorResponse');
 
 // const fs = require('fs');
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
 // @access    Public
-exports.getBootcamps = async (req, res, next) => {
-  try {
+exports.getBootcamps = asyncHandler(async (req, res, next) => {
+  // try {
     ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
 
     const bootCamps = await Bootcamp.find();
@@ -16,30 +17,30 @@ exports.getBootcamps = async (req, res, next) => {
     res.status(200).json({
       sucess: true,
       duljinaZapisa: bootCamps.length,
-      msg: 'Prikaži sve bootcamps',
       data: bootCamps,
     });
-  } catch (error) {
-    res.status(400).json({
-      sucess: false,
-      poruka: 'Očitavanje zapisa iz baze nije uspjela',
-    });
-    ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 0);
-  }
-  next();
-};
+  // } catch (error) {
+  //   next(error);
+  //   // res.status(400).json({
+  //   //   sucess: false,
+  //   //   poruka: 'Očitavanje zapisa iz baze nije uspjela',
+  //   // });
+  // }
+});
 
 // @desc      Get single bootcamp
 // @route     GET /api/v1/bootcamps/:id
 // @access    Public
-exports.getBootcamp = async (req, res, next) => {
-  try {
+exports.getBootcamp = asyncHandler( async (req, res, next) => {
+  // try {
     ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 1);
 
     const bootCamps = await Bootcamp.findById(req.params.id);
 
     if (!bootCamps) {
-      return  next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
+      return next(
+        new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
+      );
     }
     console.log('tutu');
 
@@ -48,15 +49,16 @@ exports.getBootcamp = async (req, res, next) => {
       msg: `Prikaži ${req.params.id}`,
       data: bootCamps,
     });
-  } catch (error) {
-    ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
-    next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
-    // res.status(400).json({
-    //   sucess: false,
-    //   poruka: 'Očitavanje zapisa iz baze nije uspjelaccc',
-    // });
-  }
-};
+  // } catch (error) {
+  //   ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
+  //   // next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
+  //   next(error);
+  //   // res.status(400).json({
+  //   //   sucess: false,
+  //   //   poruka: 'Očitavanje zapisa iz baze nije uspjelaccc',
+  //   // });
+  // }
+});
 
 // @desc      Create new bootcamp
 // @route     POST /api/v1/bootcamps
@@ -72,13 +74,12 @@ exports.createBootcamp = async (req, res, next) => {
       msg: 'Kreiraj bootcamps',
     });
   } catch (error) {
-    res.status(400).json({
-      sucess: false,
-      poruka: 'Greška kod zapisa',
-    });
-    console.log(error, '02- Kreiranje zapisa campa nije uspjela'.bgRed);
+    next(error);
+    // res.status(400).json({
+    //   sucess: false,
+    //   poruka: 'Greška kod zapisa',
+    // });
   }
-  next();
 };
 
 // @desc      Update bootcamp
@@ -86,8 +87,6 @@ exports.createBootcamp = async (req, res, next) => {
 // @access    Private
 exports.updateBootcamp = async (req, res, next) => {
   try {
-    ispisi('05- UPDATE jednog zapisa, bootcampsCtrl.js', 1);
-
     const bootCamps = await Bootcamp.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -98,9 +97,10 @@ exports.updateBootcamp = async (req, res, next) => {
     );
 
     if (!bootCamps) {
-      return res
-        .status(400)
-        .json({ sucess: false, poruka: 'Nije naso zapis!' });
+      return new ErrorResponse('Nije naso zapis u bazi', 404)
+      // return res
+      //   .status(400)
+      //   .json({ sucess: false, poruka: 'Nije naso zapis!' });
     }
     res.status(200).json({
       sucess: true,
@@ -108,13 +108,12 @@ exports.updateBootcamp = async (req, res, next) => {
       data: bootCamps,
     });
   } catch (error) {
-    ispisi(`05- UPDATE jednog zapisa, bootcampsCtrl.js` + error, 0);
-    res.status(400).json({
-      sucess: false,
-      poruka: error.message,
-    });
+    next(error);
+    // res.status(400).json({
+    //   sucess: false,
+    //   poruka: error.message,
+    // });
   }
-  next();
 };
 
 // @desc      Delate bootcamp
@@ -127,9 +126,10 @@ exports.deleteBootcamp = async (req, res, next) => {
     const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
 
     if (!deleteBoot) {
+      return new ErrorResponse('Nije naso zapis u bazi za brisati', 404)
       return res
         .status(400)
-        .json({ sucess: false, poruka: 'Nije naso zapis!' });
+        .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
 
     res.status(200).json({
@@ -138,11 +138,10 @@ exports.deleteBootcamp = async (req, res, next) => {
       poruka: 'Obrisan bootcamp',
     });
   } catch (error) {
-    ispisi('06- DELETE jednog zapisa, bootcampsCtrl.js', 0);
-    res.status(400).json({
-      sucess: false,
-      poruka: 'DELETE jednog zapisa iz baze nije uspjela',
-    });
+    next(error);
+    // res.status(400).json({
+    //   sucess: false,
+    //   poruka: 'DELETE jednog zapisa iz baze nije uspjela',
+    // });
   }
-  next();
 };
