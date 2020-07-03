@@ -4,6 +4,10 @@ const dotenv = require('dotenv'); // Load config file
 const logger = require('./middleware/logger');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
+const fs = require('fs');
+
+fs.appendFileSync('message.txt', '-------------Pocetak------------\n');
+
 
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
@@ -16,6 +20,9 @@ const bootcampRouter = require('./routes/bootcampsRouter');
 
 //inicijalizacija aplikacije
 const app = express();
+
+// Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
+app.use(express.json());
 
 // MIDDLEWARE
 app.use(logger);
