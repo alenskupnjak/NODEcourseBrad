@@ -14,14 +14,49 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
   let query;
 
-  let queryStr = JSON.stringify(req.query);
+  // Copy req.query
+  reqQuery = { ...req.query };
 
-  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+  // Fields to exclude
+  const removeFields = ['select', 'sort'];
+
+  // Loop over remove fields and delete from reqQery
+  removeFields.forEach((data) => {
+    delete reqQuery[data];
+  });
+  console.log(reqQuery);
+
+  // Create query strung
+  let queryStr = JSON.stringify(reqQuery);
+
+  // create operators ($gt, &gte, &gtl...)
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
   
+  // Finding resource
   query = Bootcamp.find(JSON.parse(queryStr));
+  console.log(query);
   
-  console.log(req.query, queryStr, query);
 
+  // Select fields SELECT
+  if (req.query.select) {
+    let polja = req.query.select.split(',').join(' ');
+    query = query.select(polja);
+  }
+
+  // Select fields SORT
+  if (req.query.sort) {
+    let sort = req.query.sort.split(',').join(' ');
+    query = query.sort(sort);
+  } else {
+    query = query.sort('createdAt')
+  }
+
+  // console.log(req.query, queryStr,JSON.parse(queryStr));
+  // Executing query
   const bootCamps = await query;
 
   res.status(200).json({
@@ -166,18 +201,17 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   const domaAdresa = await geocoder.geocode({
     address: '50C Kašinska cesta',
     countryCode: 'hr',
-    zipcode: '10360'
+    zipcode: '10360',
   });
   const latDoma = domaAdresa[0].latitude;
   const lngDoma = domaAdresa[0].longitude;
 
   console.log(domaAdresa[0]);
-  
 
   // Get lat/lng from geocoder
   const loc = await geocoder.geocode(zipcode);
   console.log(loc);
-  
+
   const lat = loc[0].latitude;
   const lng = loc[0].longitude;
 
@@ -201,6 +235,6 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
     success: true,
     count: bootcamps.length,
     data: bootcamps,
-    doma: doma
+    doma: doma,
   });
 });
