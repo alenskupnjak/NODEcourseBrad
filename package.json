@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "SET NODE_ENV=production& nodemon server.js",
     "dev": "nodemon server.js",
+    "build": "SET NODE_ENV=production& nodemon server.js",
     "podaciUBazu": "nodemon ubacivanjePodatakaUBazu.js"
   },
   "repository": {
