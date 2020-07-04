@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "build": "SET NODE_ENV=production& nodemon server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "podaciUBazu": "nodemon ubacivanjePodatakaUBazu.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.9.21",
     "morgan": "^1.10.0",
+    "node-geocoder": "^3.27.0",
     "prettier": "^2.0.5",
     "slugify": "^1.4.4"
   }

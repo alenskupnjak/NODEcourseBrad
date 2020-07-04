@@ -1,6 +1,7 @@
 const Bootcamp = require('../models/Bootcamps');
-const asyncHandler = require('../middleware/async')
+const asyncHandler = require('../middleware/async');
 const { ispisi } = require('../config/ispisi');
+const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
 
 // const fs = require('fs');
@@ -10,15 +11,15 @@ const ErrorResponse = require('../utils/errorResponse');
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   // try {
-    ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
+  ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
 
-    const bootCamps = await Bootcamp.find();
+  const bootCamps = await Bootcamp.find();
 
-    res.status(200).json({
-      sucess: true,
-      duljinaZapisa: bootCamps.length,
-      data: bootCamps,
-    });
+  res.status(200).json({
+    sucess: true,
+    duljinaZapisa: bootCamps.length,
+    data: bootCamps,
+  });
   // } catch (error) {
   //   next(error);
   //   // res.status(400).json({
@@ -31,24 +32,24 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 // @desc      Get single bootcamp
 // @route     GET /api/v1/bootcamps/:id
 // @access    Public
-exports.getBootcamp = asyncHandler( async (req, res, next) => {
+exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // try {
-    ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 1);
+  ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 1);
 
-    const bootCamps = await Bootcamp.findById(req.params.id);
+  const bootCamps = await Bootcamp.findById(req.params.id);
 
-    if (!bootCamps) {
-      return next(
-        new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
-      );
-    }
-    console.log('tutu');
+  if (!bootCamps) {
+    return next(
+      new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
+    );
+  }
+  console.log('tutu');
 
-    res.status(200).json({
-      sucess: true,
-      msg: `Prikaži ${req.params.id}`,
-      data: bootCamps,
-    });
+  res.status(200).json({
+    sucess: true,
+    msg: `Prikaži ${req.params.id}`,
+    data: bootCamps,
+  });
   // } catch (error) {
   //   ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
   //   // next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
@@ -97,7 +98,7 @@ exports.updateBootcamp = async (req, res, next) => {
     );
 
     if (!bootCamps) {
-      return new ErrorResponse('Nije naso zapis u bazi', 404)
+      return new ErrorResponse('Nije naso zapis u bazi', 404);
       // return res
       //   .status(400)
       //   .json({ sucess: false, poruka: 'Nije naso zapis!' });
@@ -126,7 +127,7 @@ exports.deleteBootcamp = async (req, res, next) => {
     const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
 
     if (!deleteBoot) {
-      return new ErrorResponse('Nije naso zapis u bazi za brisati', 404)
+      return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
       return res
         .status(400)
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
@@ -145,3 +146,52 @@ exports.deleteBootcamp = async (req, res, next) => {
     // });
   }
 };
+
+// @desc      Get bootcamps within a radius
+// @route     GET /api/v1/bootcamps/radius/:zipcode/:distance
+// @access    Private
+exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
+  const { zipcode, distance } = req.params;
+
+  // za primjez
+  const domaAdresa = await geocoder.geocode({
+    address: '50C Kašinska cesta',
+    countryCode: 'hr',
+    zipcode: '10360'
+  });
+  const latDoma = domaAdresa[0].latitude;
+  const lngDoma = domaAdresa[0].longitude;
+
+  console.log(domaAdresa[0]);
+  
+
+  // Get lat/lng from geocoder
+  const loc = await geocoder.geocode(zipcode);
+  console.log(loc);
+  
+  const lat = loc[0].latitude;
+  const lng = loc[0].longitude;
+
+  // Calc radius using radians
+  // Divide dist by radius of Earth
+  // Earth Radius = 3,963 mi / 6,378 km
+  //1Km is equivalent to 0.6214 miles.
+  const radius = distance / 3963;
+
+  const bootcamps = await Bootcamp.find({
+    //https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_centerSphere
+    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } },
+  });
+
+  const doma = await Bootcamp.find({
+    //https://docs.mongodb.com/manual/reference/operator/query/centerSphere/#op._S_centerSphere
+    location: { $geoWithin: { $centerSphere: [[lngDoma, latDoma], radius] } },
+  });
+
+  res.status(200).json({
+    success: true,
+    count: bootcamps.length,
+    data: bootcamps,
+    doma: doma
+  });
+});

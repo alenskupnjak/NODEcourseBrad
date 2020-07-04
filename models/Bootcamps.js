@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const slugify = require('slugify')
+const slugify = require('slugify');
+const geocoder = require('../utils/geocoder');
 
 const BootcampSchema = new mongoose.Schema(
   {
@@ -97,7 +98,7 @@ const BootcampSchema = new mongoose.Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-    }
+    },
     // ,
     // user: {
     //   type: mongoose.Schema.ObjectId,
@@ -111,22 +112,56 @@ const BootcampSchema = new mongoose.Schema(
   }
 );
 
-// Creatr bootcamp slug from the name
+///////////////////////////////////////////////////
+// Creatr bootcamp slug from the name MIDDLEWARE
 BootcampSchema.pre('save', function (next) {
- console.log('Slugify run', this)
- this.slug = slugify(this.name, {lower: true})
+  //  console.log('Slugify run', this)
+  this.slug = slugify(this.name, { lower: true });
 
-//https://www.npmjs.com/package/slugify
-//  slugify('some string', {
-//   replacement: '-',  // replace spaces with replacement character, defaults to `-`
-//   remove: undefined, // remove characters that match regex, defaults to `undefined`
-//   lower: false,      // convert to lower case, defaults to `false`
-//   strict: false,     // strip special characters except replacement, defaults to `false`
-//   locale: 'vi'       // language code of the locale to use
-// })
+  //https://www.npmjs.com/package/slugify
+  //  slugify('some string', {
+  //   replacement: '-',  // replace spaces with replacement character, defaults to `-`
+  //   remove: undefined, // remove characters that match regex, defaults to `undefined`
+  //   lower: false,      // convert to lower case, defaults to `false`
+  //   strict: false,     // strip special characters except replacement, defaults to `false`
+  //   locale: 'vi'       // language code of the locale to use
+  // })
 
- // next je obavezan
- next();
-})
+  // next je obavezan
+  next();
+});
+
+///////////////////////////////////////////////////
+// Geocode & create location field MIDDLEWARE
+BootcampSchema.pre('save', async function (next) {
+  const loc = await geocoder.geocode(this.address);
+  const domaKoordinate = await geocoder.reverse({
+    lat: 45.834389,
+    lon: 16.109584,
+  });
+  const domaAdresa = await geocoder.geocode({
+    address: '50C Kašinska cesta',
+    countryCode: 'hr',
+    zipcode: '10360'
+  });
+
+  console.log(loc, domaKoordinate, domaAdresa);
+
+  this.location = {
+    type: 'Point',
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+    street: loc[0].streetName,
+    city: loc[0].city,
+    state: loc[0].stateCode,
+    zipcode: loc[0].zipcode,
+    country: loc[0].countryCode,
+  };
+
+  // Do not save address in DB
+  // nema smisla zapisivati ovu adresu kada imamo formattedAddress!
+  this.address = undefined;
+  next();
+});
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);
