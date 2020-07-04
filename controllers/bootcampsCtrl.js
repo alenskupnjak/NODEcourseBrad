@@ -12,8 +12,17 @@ const ErrorResponse = require('../utils/errorResponse');
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   // try {
   ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
+  let query;
 
-  const bootCamps = await Bootcamp.find();
+  let queryStr = JSON.stringify(req.query);
+
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+  
+  query = Bootcamp.find(JSON.parse(queryStr));
+  
+  console.log(req.query, queryStr, query);
+
+  const bootCamps = await query;
 
   res.status(200).json({
     sucess: true,
