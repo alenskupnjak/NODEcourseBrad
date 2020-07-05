@@ -9,13 +9,22 @@ const {
   getBootcampsInRadius,
 } = require('../controllers/bootcampsCtrl');
 
-//Bazna ruta='/api/v1/bootcamps';
+
+// Include other resource routers
+const courseRouter = require('./courses');
+
+
+// Re-route into other resource routers
+router.use('/:bootcampId/courses', courseRouter);
 
 // dohvati Geocode u sfernim koordinatama
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
 
 // dohvati sve
-router.route('/').get(getBootcamps).post(createBootcamp);
+router
+  .route('/')
+  .get(getBootcamps)
+  .post(createBootcamp);
 
 // dohvati jednog
 router
