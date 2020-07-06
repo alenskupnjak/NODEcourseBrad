@@ -18,6 +18,7 @@ connectDB();
 // Route files
 const bootcampRouter = require('./routes/bootcampsRouter');
 const coursesRouter = require('./routes/courses');
+const pokusRouter = require('./routes/pokus');
 
 //inicijalizacija aplikacije
 const app = express();
@@ -36,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
+app.use('/api/v1/pokus', pokusRouter);
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);

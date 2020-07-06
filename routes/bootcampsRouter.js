@@ -7,7 +7,7 @@ const {
   updateBootcamp,
   deleteBootcamp,
   getBootcampsInRadius,
-} = require('../controllers/bootcampsCtrl');
+} = require('../controllers/bootcamp');
 
 
 // Include other resource routers

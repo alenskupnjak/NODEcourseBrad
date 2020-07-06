@@ -106,6 +106,7 @@ const BootcampSchema = new mongoose.Schema(
     //   required: true,
     // },
   },
+  // nužno za virtuals
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -142,7 +143,7 @@ BootcampSchema.pre('save', async function (next) {
   const domaAdresa = await geocoder.geocode({
     address: '50C Kašinska cesta',
     countryCode: 'hr',
-    zipcode: '10360'
+    zipcode: '10360',
   });
 
   console.log(loc, domaKoordinate, domaAdresa);
@@ -162,6 +163,23 @@ BootcampSchema.pre('save', async function (next) {
   // nema smisla zapisivati ovu adresu kada imamo formattedAddress!
   this.address = undefined;
   next();
+});
+
+// Cascade deletes courses when a bootcamp is deleted   (MIDDLEWERE-01remove)
+BootcampSchema.pre('remove', async function (next) {
+  console.log(`Courses being removed from bootcamp ${this._id}`);
+  await this.model('Course').deleteMany({ bootcamp: this._id });
+  next();
+});
+
+// Reverse populate with virtuals
+BootcampSchema.virtual('coursesNekoIme', {
+  // module.exports = mongoose.model('Course', CourseSchema);
+  ref: 'Course',
+  localField: '_id',
+  // polje iz bootcampa
+  foreignField: 'bootcamp',
+  justOne: false,
 });
 
 module.exports = mongoose.model('Bootcamp', BootcampSchema);

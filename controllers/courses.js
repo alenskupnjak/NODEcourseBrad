@@ -11,9 +11,14 @@ exports.getCourses = async (req, res, next) => {
     let query;
 
     if (req.params.bootcampId) {      
+      // ako trazimo pojedinacan course
       query = Course.find({ bootcamp: req.params.bootcampId });
     } else {
-      query = Course.find();
+      // svi coursevi
+      query = Course.find().populate({
+        path: 'bootcamp',
+        select: 'name description email'
+      });
     }
 
     const courses = await query;

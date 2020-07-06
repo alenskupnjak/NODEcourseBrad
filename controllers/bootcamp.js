@@ -36,8 +36,10 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   );
 
   // Finding resource
-  query = Bootcamp.find(JSON.parse(queryStr));
-  console.log(query);
+  query = Bootcamp.find(JSON.parse(queryStr)).populate({
+    path: 'coursesNekoIme',
+    select: 'title weeks',
+  });
 
   // Select fields SELECT
   if (req.query.select) {
@@ -59,7 +61,6 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
   const totalPage = await Bootcamp.countDocuments();
-  
 
   query.skip(startIndex).limit(limit);
 
@@ -105,14 +106,16 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // try {
   ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 1);
 
-  const bootCamps = await Bootcamp.findById(req.params.id);
+  const bootCamps = await Bootcamp.findById(req.params.id).populate({
+    path: 'coursesNekoIme',
+    select: 'title weeks minimumSkill',
+  });;
 
   if (!bootCamps) {
     return next(
       new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
     );
   }
-  console.log('tutu');
 
   res.status(200).json({
     sucess: true,
@@ -193,7 +196,8 @@ exports.deleteBootcamp = async (req, res, next) => {
   try {
     ispisi('06- DELETE jednog zapisa, bootcampsCtrl.js', 1);
 
-    const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
+    // const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
+    const deleteBoot = await Bootcamp.findById(req.params.id);
 
     if (!deleteBoot) {
       return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
@@ -201,6 +205,11 @@ exports.deleteBootcamp = async (req, res, next) => {
         .status(400)
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
+
+    // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
+    console.log('miki');
+    
+    deleteBoot.remove();
 
     res.status(200).json({
       sucess: true,
