@@ -72,12 +72,17 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     };
   }
 
+  // definirao sam podatke koje šaljem dalje
   res.advancedResults = {
     success: true,
     count: results.length,
     pagination,
     data: results,
   };
+
+  res.slon = {
+    podatak: 'kaj gledas'
+  }
 
   next();
 };

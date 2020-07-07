@@ -11,6 +11,7 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route     GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
+  console.log('Odgovor='.magenta,res.slon)
   res.status(200).json(res.advancedResults);
 });
 
