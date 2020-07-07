@@ -63,9 +63,9 @@ const reviews = JSON.parse(
 const importData = async () => {
   try {
     await Bootcamp.create(bootcamps);
-    await Course.create(courses);
+    // await Course.create(courses);
     // await User.create(users);
-    // await Review.create(reviews);
+    await Review.create(reviews);
     console.log('Updaci importirani u bazu'.green.inverse);
     process.exit();
   } catch (error) {
@@ -80,7 +80,7 @@ const deleteData = async () => {
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     // await User.deleteMany();
-    // await Review.deleteMany();
+    await Review.deleteMany();
     console.log('Updaci obrisani u bazi'.red.inverse);
     process.exit();
   } catch (error) {
