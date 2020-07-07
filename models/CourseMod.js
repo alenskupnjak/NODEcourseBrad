@@ -37,12 +37,6 @@ const CourseSchema = new mongoose.Schema({
     ref: 'Bootcamp',
     required: true
   }
-  ,
-  pokus: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Review',
-    required: false
-  }
   // ,
   // user: {
   //   type: mongoose.Schema.ObjectId,

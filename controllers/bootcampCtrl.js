@@ -11,94 +11,10 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route     GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  // try {
-  ispisi('03- Očitavanje svih zapisa, bootcampsCtrl.js', 1);
-  let query;
-
-  // Copy req.query
-  reqQuery = { ...req.query };
-
-  // Fields to exclude
-  const removeFields = ['select', 'sort', 'page', 'limit'];
-
-  // Loop over remove fields and delete from reqQery
-  removeFields.forEach((data) => {
-    delete reqQuery[data];
-  });
-  console.log(reqQuery);
-
-  // Create query strung
-  let queryStr = JSON.stringify(reqQuery);
-
-  // create operators ($gt, &gte, &gtl...)
-  queryStr = queryStr.replace(
-    /\b(gt|gte|lt|lte|in)\b/g,
-    (match) => `$${match}`
-  );
-
-  // Finding resource
-  query = Bootcamp.find(JSON.parse(queryStr)).populate({
-    path: 'coursesNekoIme',
-    select: 'title weeks',
-  });
-
-  // Select fields SELECT
-  if (req.query.select) {
-    let polja = req.query.select.split(',').join(' ');
-    query = query.select(polja);
-  }
-
-  // Select fields SORT
-  if (req.query.sort) {
-    let sort = req.query.sort.split(',').join(' ');
-    query = query.sort(sort);
-  } else {
-    query = query.sort('createdAt');
-  }
-
-  // Pagination
-  const page = parseInt(req.query.page, 10) || 1;
-  const limit = parseInt(req.query.limit, 10) || 50;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-  const totalPage = await Bootcamp.countDocuments();
-
-  query.skip(startIndex).limit(limit);
-
-  // Executing query
-  const bootCamps = await query;
-
-  // Pagination results
-  const pagination = {};
-
-  if (endIndex < totalPage) {
-    pagination.nextPage = {
-      page: page + 1,
-      limit: limit,
-    };
-  }
-
-  if (startIndex > 0) {
-    pagination.prevPage = {
-      page: page - 1,
-      limit: limit,
-    };
-  }
-
-  res.status(200).json({
-    sucess: true,
-    duljinaZapisa: bootCamps.length,
-    pagination: pagination,
-    data: bootCamps,
-  });
-  // } catch (error) {
-  //   next(error);
-  //   // res.status(400).json({
-  //   //   sucess: false,
-  //   //   poruka: 'Očitavanje zapisa iz baze nije uspjela',
-  //   // });
-  // }
+  res.status(200).json(res.advancedResults);
 });
+
+
 
 // @desc      Get single bootcamp
 // @route     GET /api/v1/bootcamps/:id
