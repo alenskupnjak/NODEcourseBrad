@@ -1,5 +1,5 @@
 const colors = require('colors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const { ispisi } = require('./config/ispisi');
 const path = require('path');
 const errorHandlerSvi = require('./middleware/error');
