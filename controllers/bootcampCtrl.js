@@ -1,4 +1,4 @@
-const Bootcamp = require('../models/Bootcamps');
+const Bootcamp = require('../models/BootcampsMod');
 const asyncHandler = require('../middleware/async');
 const { ispisi } = require('../config/ispisi');
 const geocoder = require('../utils/geocoder');
@@ -218,6 +218,8 @@ exports.deleteBootcamp = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+    // return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
+
     // res.status(400).json({
     //   sucess: false,
     //   poruka: 'DELETE jednog zapisa iz baze nije uspjela',

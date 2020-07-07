@@ -3,13 +3,15 @@ const { ispisi } = require('../config/ispisi');
 
 
 const errorHandlerSvi = (err, req, res, next) => {
-  // console.log(err);
+  console.log('U errorHandlerSvi sam');
+  console.log(err);
+  console.log('err.name=',err.name,'err.code', err.code);
 
   let errorPrekoKlase = { ...err };
 
   // Mongose bad ObjectId
   if (err.name === 'CastError') {
-    const message = `Resource not found with id of ${err.value}`;
+    const message = `Resource not found with id of ${err.value}!!`;
     errorPrekoKlase = new ErrorResponse(message, 404);
   }
 
@@ -31,7 +33,7 @@ const errorHandlerSvi = (err, req, res, next) => {
     sucess: false,
     error: errorPrekoKlase.message || 'Server error',
     statuscode: errorPrekoKlase.statusCode,
-    poruka: '  U errorHandlerSvi sam',
+    poruka: '  U errorHandlerSvi.js sam',
   });
 };
 

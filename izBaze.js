@@ -7,10 +7,10 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
 
 // Load model
-const Bootcamp = require('./models/Bootcamps');
-const Course = require('./models/Course');
+const Bootcamp = require('./models/BootcampsMod');
+const Course = require('./models/CourseMod');
 // const User = require('./models/User');
-const Review = require('./models/Review');
+const Review = require('./models/ReviewMod');
 
 // spajanje na 0Baa5idK2ZQuELRwPznQ
 const connectDB = () => {
@@ -98,4 +98,8 @@ if (process.argv[2] === '-d') {
   deleteData();
 }
 
-// process.exit();
+// Brisanje podataka iz baze
+// node izBaze.js -d
+
+// Importiranje podataka iz baze
+// node izBaze.js -i

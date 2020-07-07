@@ -16,9 +16,8 @@ dotenv.config({ path: './config/config.env' });
 connectDB();
 
 // Route files
-const bootcampRouter = require('./routes/bootcampsRouter');
-const coursesRouter = require('./routes/courses');
-const pokusRouter = require('./routes/pokus');
+const bootcampRouter = require('./routes/bootcampsRoter');
+const coursesRouter = require('./routes/coursesRouter');
 
 //inicijalizacija aplikacije
 const app = express();
@@ -37,7 +36,6 @@ if (process.env.NODE_ENV === 'development') {
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
-app.use('/api/v1/pokus', pokusRouter);
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);
