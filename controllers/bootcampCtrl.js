@@ -5,7 +5,7 @@ const { ispisi } = require('../config/ispisi');
 const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
 
-// const fs = require('fs');
+
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps

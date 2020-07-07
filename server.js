@@ -1,4 +1,5 @@
 const colors = require('colors');
+const bcrypt = require('bcrypt');
 const { ispisi } = require('./config/ispisi');
 const path = require('path');
 const errorHandlerSvi = require('./middleware/error');
@@ -20,6 +21,7 @@ connectDB();
 // Route files
 const bootcampRouter = require('./routes/bootcampsRoter');
 const coursesRouter = require('./routes/coursesRouter');
+const authRouter = require('./routes/authRouter');
 
 //inicijalizacija aplikacije
 const app = express();
@@ -44,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
+app.use('/api/v1/auth', authRouter);
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);
