@@ -17,14 +17,7 @@ exports.register = async (req, res, next) => {
       role,
     });
 
-    // Create token
-    const token = user.getSignedJwtToken();
-
-    res.status(200).json({
-      sucess: true,
-      token: token,
-      Registracija: 'Prošla',
-    });
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -36,7 +29,6 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(email, password.red);
 
     // Validate email & password
     if (!email || !password) {
@@ -58,14 +50,33 @@ exports.login = async (req, res, next) => {
       return next(new ErrorResponse('Invalid password', 401));
     }
 
-    // Create token
-    const token = user.getSignedJwtToken();
-
-    res.status(200).json({
-      sucess: true,
-      token:token
-    });
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
+};
+
+//
+// Get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+  // Create token
+  const token = user.getSignedJwtToken();
+
+  const options = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    console.log('production'.green);
+    
+    options.secure = true;
+  }
+
+  res.status(statusCode).cookie('token', token, options).json({
+    success: true,
+    token,
+  });
 };

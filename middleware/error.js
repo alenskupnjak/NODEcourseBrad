@@ -1,5 +1,4 @@
 const ErrorResponse = require('../utils/errorResponse');
-const { ispisi } = require('../config/ispisi');
 
 
 const errorHandlerSvi = (err, req, res, next) => {

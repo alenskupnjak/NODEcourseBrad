@@ -1,6 +1,6 @@
 const colors = require('colors');
 const bcrypt = require('bcryptjs');
-const { ispisi } = require('./config/ispisi');
+const cookieParser = require('cookie-parser')
 const path = require('path');
 const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
@@ -10,7 +10,6 @@ const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 
-ispisi('------ START --------', 1);
 
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
@@ -28,6 +27,9 @@ const app = express();
 
 // Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
 app.use(express.json());
+
+// Cookie parser
+app.use(cookieParser());
 
 // MIDDLEWARE
 app.use(logger);
