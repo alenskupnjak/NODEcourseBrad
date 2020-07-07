@@ -7,6 +7,7 @@ const {
   updateBootcamp,
   deleteBootcamp,
   getBootcampsInRadius,
+  bootcampPhotoUpload
 } = require('../controllers/bootcampCtrl');
 
 
@@ -19,6 +20,11 @@ router.use('/:bootcampId/courses', courseRouter);
 
 // dohvati Geocode u sfernim koordinatama
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
+
+router
+  .route('/:id/photo')
+  // .put(protect, authorize('publisher', 'admin'), bootcampPhotoUpload);
+  .put(bootcampPhotoUpload);
 
 // dohvati sve
 router

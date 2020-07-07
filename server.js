@@ -1,10 +1,12 @@
 const colors = require('colors');
 const { ispisi } = require('./config/ispisi');
+const path = require('path');
 const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
 const logger = require('./middleware/logger');
 const morgan = require('morgan');
+const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 
 ispisi('------ START --------', 1);
@@ -32,6 +34,12 @@ app.use(logger);
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// File upload
+app.use(fileUpload());
+
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 //Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);

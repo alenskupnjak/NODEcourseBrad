@@ -1,5 +1,6 @@
 const Bootcamp = require('../models/BootcampsMod');
 const asyncHandler = require('../middleware/async');
+const path = require('path');
 const { ispisi } = require('../config/ispisi');
 const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
@@ -109,7 +110,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   const bootCamps = await Bootcamp.findById(req.params.id).populate({
     path: 'coursesNekoIme',
     select: 'title weeks minimumSkill',
-  });;
+  });
 
   if (!bootCamps) {
     return next(
@@ -200,15 +201,13 @@ exports.deleteBootcamp = async (req, res, next) => {
     const deleteBoot = await Bootcamp.findById(req.params.id);
 
     if (!deleteBoot) {
-      return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
+      return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
       return res
         .status(400)
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
 
     // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
-    console.log('miki');
-    
     deleteBoot.remove();
 
     res.status(200).json({
@@ -217,8 +216,8 @@ exports.deleteBootcamp = async (req, res, next) => {
       poruka: 'Obrisan bootcamp',
     });
   } catch (error) {
-    next(error);
-    // return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
+    // next(error);
+    return next(new ErrorResponse('Nije naso zapis u bazi za brisati!!!', 404));
 
     // res.status(400).json({
     //   sucess: false,
@@ -226,6 +225,8 @@ exports.deleteBootcamp = async (req, res, next) => {
     // });
   }
 };
+
+
 
 // @desc      Get bootcamps within a radius
 // @route     GET /api/v1/bootcamps/radius/:zipcode/:distance
@@ -274,3 +275,65 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
     doma: doma,
   });
 });
+
+
+
+// @desc      UPLOAD photo
+// @route     PUT /api/v1/bootcamps/:id/photo
+// @access    Private
+exports.bootcampPhotoUpload = async (req, res, next) => {
+  try {
+    // Tražimo id u bazi za sliku
+    const fotoBoot = await Bootcamp.findById(req.params.id);
+
+    if (!fotoBoot) {
+      return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
+      return res
+        .status(400)
+        .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
+    }
+
+    if (!req.files) {
+      return next(new ErrorResponse(`Please upload a file`, 400));
+    }
+
+    const file = req.files.file;
+    console.log(file);
+
+    // Make sure the image is a photo
+    if (!file.mimetype.startsWith('image')) {
+      return next(new ErrorResponse('Please upload an image file!', 400));
+    }
+
+    // Check filesize
+    if (file.size > process.env.MAX_FILE_UPLOAD) {
+      return next(
+        new ErrorResponse(
+          `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
+          400
+        )
+      );
+    }
+
+    // Create custom filename
+    file.name = `photo_${fotoBoot._id}${path.parse(file.name).ext}`;
+    console.log(file.name);
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+      if (err) {
+        console.error(err);
+        return next(new ErrorResponse(`Problem with file upload`, 500));
+      }
+
+      await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
+
+      res.status(200).json({
+        success: true,
+        slika:'Slika usnimljena',
+        data: file.name,
+      });
+    });
+  } catch (error) {
+    return next(new ErrorResponse('Greška u photo!!!', 404));
+  }
+};

@@ -3,11 +3,12 @@ const { ispisi } = require('../config/ispisi');
 
 
 const errorHandlerSvi = (err, req, res, next) => {
-  console.log('U errorHandlerSvi sam');
-  console.log(err);
+  console.log('U errorHandlerSvi sam'.green);
   console.log('err.name=',err.name,'err.code', err.code);
 
   let errorPrekoKlase = { ...err };
+  errorPrekoKlase.message = err.message;
+
 
   // Mongose bad ObjectId
   if (err.name === 'CastError') {
@@ -33,7 +34,7 @@ const errorHandlerSvi = (err, req, res, next) => {
     sucess: false,
     error: errorPrekoKlase.message || 'Server error',
     statuscode: errorPrekoKlase.statusCode,
-    poruka: '  U errorHandlerSvi.js sam',
+    poruka: 'U errorHandlerSvi.js sam',
   });
 };
 
