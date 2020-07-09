@@ -21,7 +21,7 @@ exports.getCourses = async (req, res, next) => {
         data: courses,
       });
     } else {
-      res.status(200).json(res.advancedResults)
+      res.status(200).json(res.advancedResults);
     }
 
     // const courses = await query;
@@ -53,15 +53,10 @@ exports.getCourses = async (req, res, next) => {
 // @access    Public
 exports.getCourseOne = async (req, res, next) => {
   try {
-    const course = await Course.findById(req.params.id)
-      .populate({
-        path: 'bootcamp',
-        select: 'name description',
-      })
-      .populate({
-        path: 'pokus',
-        select: 'name description averageCost',
-      });
+    const course = await Course.findById(req.params.id).populate({
+      path: 'bootcamp',
+      select: 'name description',
+    });
 
     if (!course) {
       return next(
@@ -86,7 +81,7 @@ exports.addCourseOne = async (req, res, next) => {
   try {
     // spremamo URL.Id
     req.body.bootcamp = req.params.bootcampId;
-    // req.body.user = req.user.id;
+    req.body.user = req.user.id;
 
     // Prvo tražimo u bootcamp i taj cemo spajati sa course
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
@@ -101,14 +96,14 @@ exports.addCourseOne = async (req, res, next) => {
     }
 
     // Make sure user is bootcamp owner
-    // if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    //   return next(
-    //     new ErrorResponse(
-    //       `User ${req.user.id} is not authorized to add a course to bootcamp ${bootcamp._id}`,
-    //       401
-    //     )
-    //   );
-    // }
+    if (bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin') {
+      return next(
+        new ErrorResponse(
+          `User ${req.user.id} is not authorized to add a course to bootcamp ${bootcamp._id}`,
+          401
+        )
+      );
+    }
 
     const course = await Course.create(req.body);
 
@@ -121,28 +116,28 @@ exports.addCourseOne = async (req, res, next) => {
   }
 };
 
-
-
 // @desc      UPDATE single course
 // @route     PUT /api/v1/courses/:id
 // @access    Private
 exports.updateCourseOne = async (req, res, next) => {
   try {
-
-    console.log('sssss', req.params.id);
-    
     // Prvo tražimo u bootcamp i taj cemo spajati sa course
     let course = await Course.findById(req.params.id);
 
-    console.log('xxx',course);
-    
-
     if (!course) {
-      console.log('jjj');
-      
       return next(
         new ErrorResponse(`Nema Course with the id of ${req.params.id}`),
         404
+      );
+    }
+
+    // Make sure user is course owner
+    if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+      return next(
+        new ErrorResponse(
+          `User ${req.user.id} is not authorized to UPDATE a course to bootcamp ${course._id}`,
+          401
+        )
       );
     }
 
@@ -156,25 +151,38 @@ exports.updateCourseOne = async (req, res, next) => {
       data: course,
     });
   } catch (error) {
-    return next(new ErrorResponse(`Nema Course with the id of ${req.params.id}`),404);
+    return next(
+      new ErrorResponse(`Nema Course with the id of ${req.params.id}`),
+      404
+    );
   }
 };
-
 
 // @desc      DELETE single course
 // @route     DELETE /api/v1/courses/:id
 // @access    Private
 exports.deleteCourseOne = async (req, res, next) => {
   try {
-    console.log('req.params.id=',req.params.id);
-    
+    console.log('req.params.id=', req.params.id);
+
     // Prvo tražimo u bootcamp i taj cemo spajati sa course
     const course = await Course.findById(req.params.id);
+    
 
     if (!course) {
-        return next(
+      return next(
         new ErrorResponse(`Nema Course with the id of ${req.params.id}`),
         404
+      );
+    }
+
+    // Make sure user is course owner
+    if (course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+      return next(
+        new ErrorResponse(
+          `User ${req.user.id} is not authorized to DELETE a course to bootcamp ${course._id}, korisnik ${course.user} DA`,
+          401
+        )
       );
     }
 
@@ -184,9 +192,13 @@ exports.deleteCourseOne = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: course,
+      poruka: 'Obrisan course'
     });
   } catch (error) {
     console.log('deleteCourseOne=***'.red, error);
-    return next(new ErrorResponse(`Nema Course with the id of ${req.params.id}`),404);
+    return next(
+      new ErrorResponse(`Nema Course with the id of ${req.params.id}`),
+      404
+    );
   }
 };

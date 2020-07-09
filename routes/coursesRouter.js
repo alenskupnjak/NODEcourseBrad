@@ -9,7 +9,7 @@ const {
 } = require('../controllers/coursesCtrl');
 
 // štiti rute od neulogiranih usera
-const { protect } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
 const Course = require('../models/CourseMod');
 const advancedResults = require('../middleware/advancedResults');
@@ -17,8 +17,7 @@ const advancedResults = require('../middleware/advancedResults');
 
 const router = express.Router({ mergeParams: true });
 
-// const advancedResults = require('../middleware/advancedResults');
-// const { protect, authorize } = require('../middleware/auth');
+
 
 router
   .route('/')
@@ -29,15 +28,12 @@ router
     }),
     getCourses
   )
-  // .post(protect, authorize('publisher', 'admin'), addCourse);
-  .post(protect,addCourseOne);
+  .post(protect, authorize('publisher', 'admin'), addCourseOne);
 
 router
   .route('/:id')
   .get(getCourseOne)
-  .put(protect,updateCourseOne)
-  .delete(protect,deleteCourseOne);
-//   .put(protect, authorize('publisher', 'admin'), updateCourse)
-//   .delete(protect, authorize('publisher', 'admin'), deleteCourse);
+  .put(protect, authorize('publisher', 'admin'), updateCourseOne)
+  .delete(protect, authorize('publisher', 'admin'), deleteCourseOne);
 
 module.exports = router;

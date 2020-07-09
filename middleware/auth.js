@@ -15,7 +15,7 @@ exports.protect = async (req, res, next) => {
     // Set token from Bearer token in header
 
     token = req.headers.authorization.split(' ')[1];
-    console.log('token='.green, token);
+
     // Set token from cookie
   }
   // else if (req.cookies.token) {
@@ -25,9 +25,7 @@ exports.protect = async (req, res, next) => {
   // Make sure token exists
   if (!token) {
     return next(new ErrorResponse('Not authorized to access this route', 401));
-  } else {
-    console.log('token postoji'.green);
-  }
+  } 
 
   try {
     // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id

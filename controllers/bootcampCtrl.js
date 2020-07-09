@@ -145,7 +145,7 @@ exports.deleteBootcamp = async (req, res, next) => {
     ) {
       return next(
         new ErrorResponse(
-          `User ${req.params.id} is not authorized to update this bootcamp`,
+          `User ${req.user.id} is not authorized to update this bootcamp`,
           401
         )
       );
@@ -223,8 +223,14 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.bootcampPhotoUpload = async (req, res, next) => {
   try {
+
+    console.log('ajmoo');
+    
     // Tražimo id u bazi za sliku
     const fotoBoot = await Bootcamp.findById(req.params.id);
+
+    console.log(fotoBoot);
+    
 
     if (!fotoBoot) {
       return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
@@ -233,13 +239,12 @@ exports.bootcampPhotoUpload = async (req, res, next) => {
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
 
-    // Provjeri da li je user bootcamp owner
-    if (fotoBoot.user.toString() !== req.user.id &&
-        req.user.role !== 'admin'
-    ) {
+
+    // // Provjeri da li je user bootcamp owner
+    if (fotoBoot.user.toString() !== req.user.id && req.user.role !== 'admin') {
       return next(
         new ErrorResponse(
-          `User ${req.params.id} is not authorized to update this bootcamp`,
+          `User ${req.user.id} is not authorized to update this bootcamp`,
           401
         )
       );
