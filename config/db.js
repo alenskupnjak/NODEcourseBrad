@@ -20,7 +20,7 @@ const connectDB = () => {
       }
     })
     .catch((err) => {
-      ispisi('00- Spajanje na bazu, db.js', 0);
+      ispisi('00- Spajanje na bazu nije uspjelo, db.js', 0);
     });
 };
 

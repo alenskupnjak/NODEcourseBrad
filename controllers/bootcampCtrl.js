@@ -1,7 +1,6 @@
 const Bootcamp = require('../models/BootcampsMod');
 const asyncHandler = require('../middleware/async');
 const path = require('path');
-const { ispisi } = require('../config/ispisi');
 const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
 
@@ -11,7 +10,7 @@ const ErrorResponse = require('../utils/errorResponse');
 // @route     GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  console.log('Odgovor='.magenta,res.slon)
+  console.log('getBootcamps, bootcampCtrl.js'.magenta,req.user, res.proba)
   res.status(200).json(res.advancedResults);
 });
 
@@ -22,8 +21,6 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 // @access    Public
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // try {
-  ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 1);
-
   const bootCamps = await Bootcamp.findById(req.params.id).populate({
     path: 'coursesNekoIme',
     select: 'title weeks minimumSkill',
@@ -56,7 +53,6 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.createBootcamp = async (req, res, next) => {
   try {
-    ispisi('02- Kreiranje zapisa, bootcampsCtrl.js', 1);
 
     const bootcamp = await Bootcamp.create(req.body);
 
@@ -111,9 +107,7 @@ exports.updateBootcamp = async (req, res, next) => {
 // @route     DELETE /api/v1/bootcamps/:id
 // @access    Private
 exports.deleteBootcamp = async (req, res, next) => {
-  try {
-    ispisi('06- DELETE jednog zapisa, bootcampsCtrl.js', 1);
-
+  try {    
     // const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
     const deleteBoot = await Bootcamp.findById(req.params.id);
 

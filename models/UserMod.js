@@ -50,7 +50,7 @@ UserSchema.pre('save', async function(next) {
   this.password = await bcryptjs.hash(this.password, salt);
 });
 
-// // Sign JWT and return
+// Sign JWT and return, u token sprema id korisnika
 UserSchema.methods.getSignedJwtToken = function() {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE});
 };

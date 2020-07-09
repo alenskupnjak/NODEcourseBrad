@@ -28,10 +28,10 @@ const app = express();
 // Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
 app.use(express.json());
 
-// Cookie parser
+// Cookie parser, za slanje TOKENA
 app.use(cookieParser());
 
-// MIDDLEWARE
+// MIDDLEWARE, pokusni
 app.use(logger);
 
 // Dev logging middleware

@@ -10,6 +10,9 @@ const {
   bootcampPhotoUpload,
 } = require('../controllers/bootcampCtrl');
 
+// štiti rute od neulogiranih usera
+const { protect } = require('../middleware/auth');
+
 const Bootcamp = require('../models/BootcampsMod');
 const advancedResults = require('../middleware/advancedResults');
 
@@ -24,19 +27,19 @@ router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
 router
   .route('/:id/photo')
   // .put(protect, authorize('publisher', 'admin'), bootcampPhotoUpload);
-  .put(bootcampPhotoUpload);
+  .put(protect,bootcampPhotoUpload);
 
 // dohvati sve
 router
   .route('/')
-  .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
-  .post(createBootcamp);
+  .get(protect, advancedResults(Bootcamp, 'courses'), getBootcamps)
+  .post(protect, createBootcamp);
 
 // dohvati jednog
 router
   .route('/:id')
   .get(getBootcamp)
-  .put(updateBootcamp)
-  .delete(deleteBootcamp);
+  .put(protect,updateBootcamp)
+  .delete(protect,deleteBootcamp);
 
 module.exports = router;

@@ -8,6 +8,9 @@ const {
   deleteCourseOne,
 } = require('../controllers/coursesCtrl');
 
+// štiti rute od neulogiranih usera
+const { protect } = require('../middleware/auth');
+
 const Course = require('../models/CourseMod');
 const advancedResults = require('../middleware/advancedResults');
 
@@ -27,13 +30,13 @@ router
     getCourses
   )
   // .post(protect, authorize('publisher', 'admin'), addCourse);
-  .post(addCourseOne);
+  .post(protect,addCourseOne);
 
 router
   .route('/:id')
   .get(getCourseOne)
-  .put(updateCourseOne)
-  .delete(deleteCourseOne);
+  .put(protect,updateCourseOne)
+  .delete(protect,deleteCourseOne);
 //   .put(protect, authorize('publisher', 'admin'), updateCourse)
 //   .delete(protect, authorize('publisher', 'admin'), deleteCourse);
 
