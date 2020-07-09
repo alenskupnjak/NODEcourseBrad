@@ -1,6 +1,7 @@
 const User = require('../models/UserMod');
 const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');
+const bcryptjs = require('bcryptjs');
 
 // @desc      Register user
 // @route     POST /api/v1/auth/register
@@ -95,10 +96,14 @@ const sendTokenResponse = (user, statusCode, res) => {
 // @access    Private
 exports.getMe = async (req, res, next) => {
   try {
-    console.log('getme'.green,req.user);
+    console.log('getme'.green,req.user.id);
     
-    const user = await User.findById(req.user.id);
-  
+    const user = await User.findById(req.user.id).select('+password');;
+    console.log(user);
+
+    let pass = await bcryptjs.compare('test1234', user.password);
+    console.log('pass=',pass);
+    
     res.status(200).json({
       success: true,
       data: user
