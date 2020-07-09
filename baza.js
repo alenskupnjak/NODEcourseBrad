@@ -9,7 +9,7 @@ dotenv.config({ path: './config/config.env' });
 // Load model
 const Bootcamp = require('./models/BootcampsMod');
 const Course = require('./models/CourseMod');
-// const User = require('./models/User');
+const User = require('./models/UserMod');
 const Review = require('./models/ReviewMod');
 
 // spajanje na 0Baa5idK2ZQuELRwPznQ
@@ -45,6 +45,7 @@ const bootcamps = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/bootcamps.json`, 'utf-8')
 );
 
+
 const courses = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/courses.json`, 'utf-8')
 );
@@ -64,7 +65,7 @@ const importData = async () => {
   try {
     await Bootcamp.create(bootcamps);
     await Course.create(courses);
-    // await User.create(users);
+    await User.create(users);
     await Review.create(reviews);
     console.log('Updaci importirani u bazu'.green.inverse);
     process.exit();
@@ -79,7 +80,7 @@ const deleteData = async () => {
     // brise cijeli zapis u bazi
     await Bootcamp.deleteMany();
     await Course.deleteMany();
-    // await User.deleteMany();
+    await User.deleteMany();
     await Review.deleteMany();
     console.log('Updaci obrisani u bazi'.red.inverse);
     process.exit();

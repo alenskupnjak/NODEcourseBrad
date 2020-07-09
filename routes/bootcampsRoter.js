@@ -32,13 +32,13 @@ router
 router
   .route('/')
   .get(protect, advancedResults(Bootcamp, 'courses'), getBootcamps)
-  .post(protect, authorize('publisher', 'admin'),createBootcamp);
+  .post(protect, authorize('publisher', 'admin'), createBootcamp);
 
 // dohvati jednog
 router
   .route('/:id')
   .get(getBootcamp)
-  .put(protect, updateBootcamp)
-  .delete(protect,authorize('publisher', 'admin'), deleteBootcamp);
+  .put(protect, authorize('publisher', 'admin'), updateBootcamp)
+  .delete(protect, authorize('publisher', 'admin'), deleteBootcamp);
 
 module.exports = router;

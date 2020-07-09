@@ -64,9 +64,8 @@ CourseSchema.statics.getAverageCost = async function(bootcampId) {
   
   try {
     // odlazi u model Bootcamp
-    console.log('hi'.red,this.model('Course'));
+    console.log('Pokusni model'.red,this.model('Course'));
     let pokus = await this.model('Course').findById('5f043c249de8cf1dd43d6555')
-    console.log('Pokus='.blue,pokus);
     
     await this.model('Bootcamp').findByIdAndUpdate(bootcampId, {
       averageCost: Math.ceil(obj[0].averageCost / 10) * 10

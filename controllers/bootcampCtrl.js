@@ -4,17 +4,13 @@ const path = require('path');
 const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
 
-
-
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  console.log('getBootcamps, bootcampCtrl.js'.magenta,req.user, res.proba)
+  console.log('getBootcamps, bootcampCtrl.js'.magenta, req.user, res.proba);
   res.status(200).json(res.advancedResults);
 });
-
-
 
 // @desc      Get single bootcamp
 // @route     GET /api/v1/bootcamps/:id
@@ -22,7 +18,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // try {
   const bootCamps = await Bootcamp.findById(req.params.id).populate({
-    path: 'coursesNekoIme',
+    path: 'courses',
     select: 'title weeks minimumSkill',
   });
 
@@ -53,6 +49,21 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.createBootcamp = async (req, res, next) => {
   try {
+    // Add user to req,body
+    req.body.user = req.user.id;
+
+    // Check for published bootcamp, user može upisati samo jedan bootcamp
+    const publishedBootcamp = await Bootcamp.findOne({ user: req.user.id });
+
+    // If the user is not an admin, they can only add one bootcamp
+    if (publishedBootcamp && req.user.role !== 'admin') {
+      return next(
+        new ErrorResponse(
+          `The user with ID ${req.user.id} has already published a bootcamp`,
+          400
+        )
+      );
+    }
 
     const bootcamp = await Bootcamp.create(req.body);
 
@@ -74,14 +85,7 @@ exports.createBootcamp = async (req, res, next) => {
 // @access    Private
 exports.updateBootcamp = async (req, res, next) => {
   try {
-    const bootCamps = await Bootcamp.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    let bootCamps = await Bootcamp.findById(req.params.id);
 
     if (!bootCamps) {
       return new ErrorResponse('Nije naso zapis u bazi', 404);
@@ -89,6 +93,25 @@ exports.updateBootcamp = async (req, res, next) => {
       //   .status(400)
       //   .json({ sucess: false, poruka: 'Nije naso zapis!' });
     }
+
+    // Provjeri da li je user bootcamp owner
+    if (
+      bootCamps.user.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to update this bootcamp`,
+          401
+        )
+      );
+    }
+
+    bootCamps = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
     res.status(200).json({
       sucess: true,
       msg: `Prikaži ${req.params.id}`,
@@ -103,19 +126,29 @@ exports.updateBootcamp = async (req, res, next) => {
   }
 };
 
-// @desc      Delate bootcamp
+// @desc      Delete bootcamp
 // @route     DELETE /api/v1/bootcamps/:id
 // @access    Private
 exports.deleteBootcamp = async (req, res, next) => {
-  try {    
+  try {
     // const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
     const deleteBoot = await Bootcamp.findById(req.params.id);
 
     if (!deleteBoot) {
       return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
-      return res
-        .status(400)
-        .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
+    }
+
+    // Provjeri da li je user bootcamp owner
+    if (
+      deleteBoot.user.toString() !== req.user.id &&
+      req.user.role !== 'admin'
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to update this bootcamp`,
+          401
+        )
+      );
     }
 
     // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
@@ -136,8 +169,6 @@ exports.deleteBootcamp = async (req, res, next) => {
     // });
   }
 };
-
-
 
 // @desc      Get bootcamps within a radius
 // @route     GET /api/v1/bootcamps/radius/:zipcode/:distance
@@ -187,8 +218,6 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   });
 });
 
-
-
 // @desc      UPLOAD photo
 // @route     PUT /api/v1/bootcamps/:id/photo
 // @access    Private
@@ -204,12 +233,23 @@ exports.bootcampPhotoUpload = async (req, res, next) => {
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
 
+    // Provjeri da li je user bootcamp owner
+    if (fotoBoot.user.toString() !== req.user.id &&
+        req.user.role !== 'admin'
+    ) {
+      return next(
+        new ErrorResponse(
+          `User ${req.params.id} is not authorized to update this bootcamp`,
+          401
+        )
+      );
+    }
+
     if (!req.files) {
       return next(new ErrorResponse(`Please upload a file`, 400));
     }
 
     const file = req.files.file;
-    console.log(file);
 
     // Make sure the image is a photo
     if (!file.mimetype.startsWith('image')) {
@@ -240,7 +280,7 @@ exports.bootcampPhotoUpload = async (req, res, next) => {
 
       res.status(200).json({
         success: true,
-        slika:'Slika usnimljena',
+        slika: 'Slika usnimljena',
         data: file.name,
       });
     });

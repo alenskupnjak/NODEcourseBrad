@@ -99,12 +99,11 @@ const BootcampSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    // ,
-    // user: {
-    //   type: mongoose.Schema.ObjectId,
-    //   ref: 'User',
-    //   required: true,
-    // },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: true,
+    },
   },
   // nužno za virtuals
   {
@@ -173,7 +172,7 @@ BootcampSchema.pre('remove', async function (next) {
 });
 
 // Reverse populate with virtuals
-BootcampSchema.virtual('coursesNekoIme', {
+BootcampSchema.virtual('courses', {
   // module.exports = mongoose.model('Course', CourseSchema);
   ref: 'Course',
   localField: '_id',

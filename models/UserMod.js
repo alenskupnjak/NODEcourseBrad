@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please add a password'],
-    minlength: 6,
+    minlength: 4,
     select: false
   },
   resetPasswordToken: String,
@@ -46,7 +46,7 @@ UserSchema.pre('save', async function(next) {
   }
   const salt = await bcryptjs.genSalt(10);
   console.log(this.name);
-  
+  // kreiram passvord prije snimanja u bazu"
   this.password = await bcryptjs.hash(this.password, salt);
 });
 

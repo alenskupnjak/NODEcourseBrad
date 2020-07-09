@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "build": "SET NODE_ENV=production& nodemon server.js",
-    "podaciUBazu": "nodemon ubacivanjePodatakaUBazu.js"
+    "build": "SET NODE_ENV=production& nodemon server.js"
   },
   "repository": {
     "type": "git",

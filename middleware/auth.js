@@ -30,7 +30,7 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    // Verify token, usporeduje sa dobivenim tokenom i sekret ključem
+    // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log('Decoded='.blue, decoded);
 
