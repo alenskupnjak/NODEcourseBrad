@@ -1,5 +1,5 @@
 const express = require('express');
-const { register, login, getMe } = require('../controllers/authCtrl');
+const { register, login, getMe, forgotpassword } = require('../controllers/authCtrl');
 const bcrypt = require('bcryptjs');
 
 const router = express.Router();
@@ -11,5 +11,11 @@ const { protect } = require('../middleware/auth');
 router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/me').get(protect,getMe);
+
+
+// dva načina 
+router.post('/forgotpassword',forgotpassword);
+// ili
+router.route('/forgotpassword').post(forgotpassword);
 
 module.exports = router;

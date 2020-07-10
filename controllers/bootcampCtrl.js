@@ -134,31 +134,28 @@ exports.deleteBootcamp = async (req, res, next) => {
     // const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
     const deleteBoot = await Bootcamp.findById(req.params.id);
 
+    // nije našai zapis u bazi, javlja grešku
     if (!deleteBoot) {
       return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
     }
 
     // Provjeri da li je user bootcamp owner
-    if (
-      deleteBoot.user.toString() !== req.user.id &&
-      req.user.role !== 'admin'
-    ) {
+    if (deleteBoot.user.toString() === req.user.id || req.user.role === 'admin') {
+      // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
+      deleteBoot.remove();
+
+      // imamo admina ili owner-a , saljemo sucess
+      res.status(200).json({
+        sucess: true,
+        msg: `Prikaži ${req.params.id}`,
+        poruka: 'Obrisan bootcamp',
+      });
+    } else {
       return next(
         new ErrorResponse(
-          `User ${req.user.id} is not authorized to update this bootcamp`,
-          401
-        )
+          `Korisnik ${req.user.id} nije authorized to update this bootcamp ${req.params.id}`, 401)
       );
     }
-
-    // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
-    deleteBoot.remove();
-
-    res.status(200).json({
-      sucess: true,
-      msg: `Prikaži ${req.params.id}`,
-      poruka: 'Obrisan bootcamp',
-    });
   } catch (error) {
     // next(error);
     return next(new ErrorResponse('Nije naso zapis u bazi za brisati!!!', 404));
@@ -223,14 +220,12 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.bootcampPhotoUpload = async (req, res, next) => {
   try {
-
     console.log('ajmoo');
-    
+
     // Tražimo id u bazi za sliku
     const fotoBoot = await Bootcamp.findById(req.params.id);
 
     console.log(fotoBoot);
-    
 
     if (!fotoBoot) {
       return new ErrorResponse('Nije naso zapis u bazi za brisati', 404);
@@ -238,7 +233,6 @@ exports.bootcampPhotoUpload = async (req, res, next) => {
         .status(400)
         .json({ sucess: false, poruka: 'Nije naso zapis za obrisati u bazi!' });
     }
-
 
     // // Provjeri da li je user bootcamp owner
     if (fotoBoot.user.toString() !== req.user.id && req.user.role !== 'admin') {

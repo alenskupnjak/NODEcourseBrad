@@ -65,6 +65,62 @@ exports.login = async (req, res, next) => {
   }
 };
 
+// @desc      Get current logged in user
+// @route     POST /api/v1/auth/me
+// @access    Private
+exports.getMe = async (req, res, next) => {
+  try {
+    console.log('getme'.green, req.user.id);
+
+    const user = await User.findById(req.user.id).select('+password');
+    console.log(user);
+
+    let pass = await bcryptjs.compare('test1234', user.password);
+    console.log('pass=', pass);
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return next(new ErrorResponse(error, 400));
+  }
+};
+
+// @desc      Zaboravio sam password
+// @route     POST /api/v1/auth/forgotpassword
+// @access    Public
+exports.forgotpassword = async (req, res, next) => {
+  try {
+    console.log('forgotpassword'.green);
+    // console.log('forgotpassword'.green, req.body.email);
+    console.log('forgotpassword', req.body);
+
+    const user = await User.findOne({ email: req.body.email });
+
+    // ako nema ragistriranog korisnika pod tim emailom, javlja grešku
+    if (!user) {
+      return next(new ErrorResponse('Takav korisni ne postoji!', 400));
+    }
+
+    // Resetiraj TOKEN za ovog korisnika
+    const resetToken = user.getResetPasswordToken();
+
+    // snimi privremeno resetPasswordToken i resetPasswordExpire u bazu
+    await user.save({ validateBeforeSave: false });
+
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    
+    return next(new ErrorResponse(error, 400));
+  }
+};
+
 //
 //TOKEN
 // Get token from model, create cookie and send response
@@ -88,28 +144,4 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token: token,
   });
-};
-
-
-// @desc      Get current logged in user
-// @route     POST /api/v1/auth/me
-// @access    Private
-exports.getMe = async (req, res, next) => {
-  try {
-    console.log('getme'.green,req.user.id);
-    
-    const user = await User.findById(req.user.id).select('+password');;
-    console.log(user);
-
-    let pass = await bcryptjs.compare('test1234', user.password);
-    console.log('pass=',pass);
-    
-    res.status(200).json({
-      success: true,
-      data: user
-    });
-    
-  } catch (error) {
-    return next(new ErrorResponse(error, 400));
-  }
 };
