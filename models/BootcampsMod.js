@@ -167,6 +167,7 @@ BootcampSchema.pre('save', async function (next) {
 // Cascade deletes courses when a bootcamp is deleted   (MIDDLEWERE-01remove)
 BootcampSchema.pre('remove', async function (next) {
   console.log(`Courses being removed from bootcamp ${this._id}`);
+  // kada brišemo jedan bootcamp, automatski brišemo i vezane kurseve
   await this.model('Course').deleteMany({ bootcamp: this._id });
   next();
 });

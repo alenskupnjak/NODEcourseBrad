@@ -21,6 +21,7 @@ connectDB();
 const bootcampRouter = require('./routes/bootcampsRoter');
 const coursesRouter = require('./routes/coursesRouter');
 const authRouter = require('./routes/authRouter');
+const userRouter = require('./routes/userRouter');
 
 //inicijalizacija aplikacije
 const app = express();
@@ -49,6 +50,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/users', userRouter);
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);

@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const {
   register,
   login,
@@ -8,7 +9,6 @@ const {
   updateUserDetails,
   updatePassword
 } = require('../controllers/authCtrl');
-const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 

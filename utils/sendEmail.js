@@ -35,6 +35,6 @@ const sendEmail = async options => {
   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 }
 
-sendEmail().catch(console.error);
+// sendEmail().catch(console.error);
 
 module.exports = sendEmail;

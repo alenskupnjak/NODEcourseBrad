@@ -23,7 +23,7 @@ exports.protect = async (req, res, next) => {
   // Make sure token exists
   if (!token) {
     return next(new ErrorResponse('Not authorized to access this route', 401));
-  } 
+  }
 
   try {
     // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id
@@ -46,9 +46,26 @@ exports.authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
-        new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`,403)
+        new ErrorResponse(
+          `User role ${req.user.role} is not authorized to access this route`,
+          403
+        )
       );
     }
     next();
+  };
+};
+
+// Grant access to specific roles
+exports.authorizeKorisnik = (...roles) => {
+  console.log('roles**********'.bgBlue, roles);
+  return (req, res, next) => {
+    if (roles.includes(req.user.role)) {
+      // User je ovlašten, nastavlja sa radom
+       return next();
+    }
+    // Korisnik nije ovlašten za ovu stazi
+      next(new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`,403)
+    );
   };
 };

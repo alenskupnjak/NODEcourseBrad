@@ -44,6 +44,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // }
 });
 
+//////////////////////////////////////////////////////
 // @desc      Create new bootcamp
 // @route     POST /api/v1/bootcamps
 // @access    Private
@@ -80,6 +81,7 @@ exports.createBootcamp = async (req, res, next) => {
   }
 };
 
+////////////////////////////////////////////////////////////////////////
 // @desc      Update bootcamp
 // @route     PUT /api/v1/bootcamps/:id
 // @access    Private
@@ -126,23 +128,27 @@ exports.updateBootcamp = async (req, res, next) => {
   }
 };
 
+//////////////////////////////////////////////////////////////////////////////
 // @desc      Delete bootcamp
 // @route     DELETE /api/v1/bootcamps/:id
 // @access    Private
 exports.deleteBootcamp = async (req, res, next) => {
   try {
-    // const deleteBoot = await Bootcamp.findByIdAndDelete(req.params.id);
-    const deleteBoot = await Bootcamp.findById(req.params.id);
-
-    // nije našai zapis u bazi, javlja grešku
-    if (!deleteBoot) {
-      return next(new ErrorResponse('Nije naso zapis u bazi za brisati', 404));
+    // const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+    const bootcamp = await Bootcamp.findById(req.params.id);
+    console.log('bootcamp'.red,bootcamp);
+    
+    // nije našao zapis u bazi, javlja grešku
+    if (!bootcamp) {
+      console.log('*****'.blue);
+      console.log(' ovdije nikad nece doci.......');
+      return next(new ErrorResponse('Nije naso zapis u bazi, ne moze obrisati', 404));
     }
 
     // Provjeri da li je user bootcamp owner
-    if (deleteBoot.user.toString() === req.user.id || req.user.role === 'admin') {
+    if (bootcamp.user.toString() === req.user.id || req.user.role === 'admin') {
       // ovo radimo da možemo aktivirati(MIDDLEWERE-01remove)
-      deleteBoot.remove();
+      bootcamp.remove();
 
       // imamo admina ili owner-a , saljemo sucess
       res.status(200).json({
@@ -153,7 +159,7 @@ exports.deleteBootcamp = async (req, res, next) => {
     } else {
       return next(
         new ErrorResponse(
-          `Korisnik ${req.user.id} nije authorized to update this bootcamp ${req.params.id}`, 401)
+          `Korisnik ${req.user.id} nije autoriziran za brisanje ovog bootcama ${req.params.id}`, 401)
       );
     }
   } catch (error) {
