@@ -5,7 +5,8 @@ const {
   getMe,
   forgotpassword,
   resetPassword,
-  updateUserDetails
+  updateUserDetails,
+  updatePassword
 } = require('../controllers/authCtrl');
 const bcrypt = require('bcryptjs');
 
@@ -19,7 +20,7 @@ router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/me').get(protect, getMe);
 router.route('/updateuserdetails').put(protect, updateUserDetails);
-// router.route('/resetpassword/:resettoken').put(resetPassword);
+router.route('/updatepassword').put(protect,updatePassword);
 router.put('/resetpassword/:resettoken', resetPassword);
 
 // dva načina

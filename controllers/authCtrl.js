@@ -4,7 +4,9 @@ const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');
 const bcryptjs = require('bcryptjs');
 const sendEmail = require('../utils/sendEmail');
+const jwt = require('jsonwebtoken');
 
+/////////////////////////////////////////////////////////
 // @desc      Register user
 // @route     POST /api/v1/auth/register
 // @access    Public
@@ -73,8 +75,6 @@ exports.login = async (req, res, next) => {
 // @access    Private
 exports.getMe = async (req, res, next) => {
   try {
-    console.log('getme'.green, req.user.id);
-
     const user = await User.findById(req.user.id).select('+password');
 
     res.status(200).json({
@@ -111,6 +111,32 @@ exports.updateUserDetails = async (req, res, next) => {
     return next(new ErrorResponse(error, 400));
   }
 };
+
+/////////////////////////////////////////////////////////
+// @desc      UPDATE password
+// @route     PUT /api/v1/auth/updatepassword
+// @access    Private
+exports.updatePassword = async (req, res, next) => {
+  try { 
+    // za logiranog usera trazimo u bazi, selektiramo
+    const user = await User.findById(req.user.id).select('+password');
+
+  //  Provjeri dali je password u bazi jednak unesenom, ako ne baci grešku
+    if(!(await user.matchPassword(req.body.currentPassword))) {
+      return next(new ErrorResponse('Password je neispravan', 400));
+    }
+
+    user.password = req.body.newPassword;
+    // snimanje podataka
+    await user.save()
+    
+    //šaljemo NOVI TOKEN token
+    sendTokenResponse(user, 200, res);
+  } catch (error) {
+    return next(new ErrorResponse(error, 400));
+  }
+};
+
 
 ////////////////////////////////////////////////////////////
 // @desc      Zaboravio sam password
@@ -157,6 +183,7 @@ exports.forgotpassword = async (req, res, next) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
+    // snimi promjene
     await user.save({ validateBeforeSave: false });
 
     return next(new ErrorResponse('Email could not be sent', 500));
@@ -196,17 +223,16 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
-//
+////////////////////////////////////////////////////////////////
 //TOKEN
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
-  const token = user.getSignedJwtToken();
-
+  // const token = user.getSignedJwtToken();  
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE});
+  
   const options = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date( Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
 
@@ -215,6 +241,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.secure = true;
   }
 
+  // saljemo TOKEN u browser.....
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token: token,
