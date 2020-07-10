@@ -5,6 +5,7 @@ const {
   getMe,
   forgotpassword,
   resetPassword,
+  updateUserDetails
 } = require('../controllers/authCtrl');
 const bcrypt = require('bcryptjs');
 
@@ -17,6 +18,7 @@ const { protect } = require('../middleware/auth');
 router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/me').get(protect, getMe);
+router.route('/updateuserdetails').put(protect, updateUserDetails);
 // router.route('/resetpassword/:resettoken').put(resetPassword);
 router.put('/resetpassword/:resettoken', resetPassword);
 

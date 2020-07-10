@@ -67,6 +67,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
+/////////////////////////////////////////////////////////
 // @desc      Get current logged in user
 // @route     POST /api/v1/auth/me
 // @access    Private
@@ -75,10 +76,6 @@ exports.getMe = async (req, res, next) => {
     console.log('getme'.green, req.user.id);
 
     const user = await User.findById(req.user.id).select('+password');
-    console.log(user);
-
-    let pass = await bcryptjs.compare('test1234', user.password);
-    console.log('pass=', pass);
 
     res.status(200).json({
       success: true,
@@ -89,6 +86,33 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+///////////////////////////////////////////////
+// @desc      UPDATE user details
+// @route     PUT /api/v1/auth/updateuserdetails
+// @access    Private
+exports.updateUserDetails = async (req, res, next) => {
+  try {
+    const poljaToUpdate = {
+      name :req.body.name,
+      email: req.body.email
+    }
+    console.log('updateDetails'.green, req.user.id);
+
+    const user = await User.findByIdAndUpdate(req.user.id, poljaToUpdate, {
+      new:true,
+      runValidators: true
+    });
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return next(new ErrorResponse(error, 400));
+  }
+};
+
+////////////////////////////////////////////////////////////
 // @desc      Zaboravio sam password
 // @route     POST /api/v1/auth/forgotpassword
 // @access    Public
