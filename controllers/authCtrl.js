@@ -2,6 +2,7 @@ const User = require('../models/UserMod');
 const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');
 const bcryptjs = require('bcryptjs');
+const sendEmail = require('../utils/sendEmail');
 
 // @desc      Register user
 // @route     POST /api/v1/auth/register
@@ -92,10 +93,7 @@ exports.getMe = async (req, res, next) => {
 // @access    Public
 exports.forgotpassword = async (req, res, next) => {
   try {
-    console.log('forgotpassword'.green);
-    // console.log('forgotpassword'.green, req.body.email);
-    console.log('forgotpassword', req.body);
-
+    // Trazimo usera prema email-u
     const user = await User.findOne({ email: req.body.email });
 
     // ako nema ragistriranog korisnika pod tim emailom, javlja grešku
@@ -109,15 +107,30 @@ exports.forgotpassword = async (req, res, next) => {
     // snimi privremeno resetPasswordToken i resetPasswordExpire u bazu
     await user.save({ validateBeforeSave: false });
 
+    // Create reset URL
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/resetpassword/${resetToken}`;
 
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+    console.log(resetUrl);
+
+    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+
+    try {
+      await sendEmail({email: user.email, subject: 'Password reset token', message});
+      res.status(200).json({
+        success: true,
+        data: 'Email sent',
+      });
+    } catch (error) {
+      console.log(error);
+    }
   } catch (error) {
-    console.log(error);
-    
-    return next(new ErrorResponse(error, 400));
+    console.log(err);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save({ validateBeforeSave: false });
+
+    return next(new ErrorResponse('Email could not be sent', 500));
   }
 };
 
