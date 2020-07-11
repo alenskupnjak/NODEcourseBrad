@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js",
-    "build": "SET NODE_ENV=production& nodemon server.js"
+    "dev": "nodemon app.js",
+    "build": "SET NODE_ENV=production& nodemon app.js"
   },
   "repository": {
     "type": "git",

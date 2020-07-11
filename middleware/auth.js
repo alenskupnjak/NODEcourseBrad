@@ -13,8 +13,6 @@ exports.protect = async (req, res, next) => {
   ) {
     // Set token from Bearer token in header
     token = req.headers.authorization.split(' ')[1];
-
-    // Set token from cookie
   }
   // else if (req.cookies.token) {
   //   token = req.cookies.token;
@@ -28,11 +26,10 @@ exports.protect = async (req, res, next) => {
   try {
     // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('Decoded='.blue, decoded);
 
     // ovaj user se koristi dalje u programu
     req.user = await User.findById(decoded.id);
-    res.proba = 'probni text';
+    res.proba = 'probni text, provlaci se kroz cijeli program..';
 
     next();
   } catch (err) {
@@ -42,9 +39,9 @@ exports.protect = async (req, res, next) => {
 
 // Grant access to specific roles
 exports.authorize = (...roles) => {
-  console.log('roles**********'.yellow, roles);
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
+      console.log('roles**********'.yellow, roles);
       return next(
         new ErrorResponse(
           `User role ${req.user.role} is not authorized to access this route`,
@@ -58,14 +55,18 @@ exports.authorize = (...roles) => {
 
 // Grant access to specific roles
 exports.authorizeKorisnik = (...roles) => {
-  console.log('roles**********'.bgBlue, roles);
   return (req, res, next) => {
     if (roles.includes(req.user.role)) {
+      console.log('roles**********'.bgRed, roles);
       // User je ovlašten, nastavlja sa radom
-       return next();
+      return next();
     }
     // Korisnik nije ovlašten za ovu stazi
-      next(new ErrorResponse(`User role ${req.user.role} is not authorized to access this route`,403)
+    next(
+      new ErrorResponse(
+        `User role ${req.user.role} is not authorized to access this route`,
+        403
+      )
     );
   };
 };

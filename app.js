@@ -14,7 +14,7 @@ const connectDB = require('./config/db');
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
 
-// Connect to database
+// Spajanje na bazu
 connectDB();
 
 // Route files
@@ -22,6 +22,7 @@ const bootcampRouter = require('./routes/bootcampsRoter');
 const coursesRouter = require('./routes/coursesRouter');
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
+const reviewsRouter = require('./routes/reviewsRouter');
 
 //inicijalizacija aplikacije
 const app = express();
@@ -46,11 +47,12 @@ app.use(fileUpload());
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Mount routers
+// Mount routers
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/reviews', reviewsRouter );
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);

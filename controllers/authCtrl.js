@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const User = require('../models/UserMod');
 const path = require('path');
 const ErrorResponse = require('../utils/errorResponse');
-const bcryptjs = require('bcryptjs');
+// const bcryptjs = require('bcryptjs');
 const sendEmail = require('../utils/sendEmail');
 const jwt = require('jsonwebtoken');
 
@@ -59,7 +59,7 @@ exports.login = async (req, res, next) => {
     if (!isMatch) {
       return next(new ErrorResponse('Invalid password', 401));
     } else {
-      console.log('Provjerio sam password i on je OK'.green);
+      console.log('Provjerio sam password i on je OK.'.green);
     }
 
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
@@ -96,7 +96,6 @@ exports.updateUserDetails = async (req, res, next) => {
       name :req.body.name,
       email: req.body.email
     }
-    console.log('updateDetails'.green, req.user.id);
 
     const user = await User.findByIdAndUpdate(req.user.id, poljaToUpdate, {
       new:true,

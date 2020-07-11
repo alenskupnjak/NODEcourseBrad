@@ -127,7 +127,6 @@ BootcampSchema.pre('save', function (next) {
   //   locale: 'vi'       // language code of the locale to use
   // })
 
-  // next je obavezan
   next();
 });
 
@@ -164,6 +163,7 @@ BootcampSchema.pre('save', async function (next) {
   next();
 });
 
+////////////////////////////////////////////////////////////////////////////
 // Cascade deletes courses when a bootcamp is deleted   (MIDDLEWERE-01remove)
 BootcampSchema.pre('remove', async function (next) {
   console.log(`Courses being removed from bootcamp ${this._id}`);
@@ -172,6 +172,8 @@ BootcampSchema.pre('remove', async function (next) {
   next();
 });
 
+
+/////////////////////////////////////////////////
 // Reverse populate with virtuals
 BootcampSchema.virtual('courses', {
   // module.exports = mongoose.model('Course', CourseSchema);

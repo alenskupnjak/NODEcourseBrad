@@ -45,7 +45,6 @@ UserSchema.pre('save', async function(next) {
     next();
   }
   const salt = await bcryptjs.genSalt(10);
-  console.log(this.name);
   // kreiram passvord prije snimanja u bazu"
   this.password = await bcryptjs.hash(this.password, salt);
 });

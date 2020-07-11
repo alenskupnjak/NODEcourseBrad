@@ -9,7 +9,7 @@ const {
 } = require('../controllers/coursesCtrl');
 
 // štiti rute od neulogiranih usera
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorizeKorisnik } = require('../middleware/auth');
 
 const Course = require('../models/CourseMod');
 const advancedResults = require('../middleware/advancedResults');
@@ -28,12 +28,12 @@ router
     }),
     getCourses
   )
-  .post(protect, authorize('publisher', 'admin'), addCourseOne);
+  .post(protect, authorizeKorisnik('publisher', 'admin'), addCourseOne);
 
 router
   .route('/:id')
   .get(getCourseOne)
-  .put(protect, authorize('publisher', 'admin'), updateCourseOne)
-  .delete(protect, authorize('publisher', 'admin'), deleteCourseOne);
+  .put(protect,authorizeKorisnik('publisher', 'admin'), updateCourseOne)
+  .delete(protect, authorizeKorisnik('publisher', 'admin'), deleteCourseOne);
 
 module.exports = router;

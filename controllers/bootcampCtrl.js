@@ -136,13 +136,15 @@ exports.deleteBootcamp = async (req, res, next) => {
   try {
     // const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
     const bootcamp = await Bootcamp.findById(req.params.id);
-    console.log('bootcamp'.red,bootcamp);
-    
+    console.log('bootcamp'.red, bootcamp);
+
     // nije našao zapis u bazi, javlja grešku
     if (!bootcamp) {
       console.log('*****'.blue);
       console.log(' ovdije nikad nece doci.......');
-      return next(new ErrorResponse('Nije naso zapis u bazi, ne moze obrisati', 404));
+      return next(
+        new ErrorResponse('Nije naso zapis u bazi, ne moze obrisati', 404)
+      );
     }
 
     // Provjeri da li je user bootcamp owner
@@ -159,7 +161,9 @@ exports.deleteBootcamp = async (req, res, next) => {
     } else {
       return next(
         new ErrorResponse(
-          `Korisnik ${req.user.id} nije autoriziran za brisanje ovog bootcama ${req.params.id}`, 401)
+          `Korisnik ${req.user.id} nije autoriziran za brisanje ovog bootcama ${req.params.id}`,
+          401
+        )
       );
     }
   } catch (error) {

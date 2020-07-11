@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { ispisi } = require('../config/ispisi');
 
 // spajanje na databazu
 const connectDB = () => {
@@ -11,7 +10,6 @@ const connectDB = () => {
       useUnifiedTopology: true,
     })
     .then(() => {
-      ispisi('00- Spajanje na bazu, db.js', 1);
       console.log(`${process.env.OS}, Spojen na MongoDB, PORT= ${process.env.PORT}`.yellow.bold);
       if (process.env.NODE_ENV === 'production') {
         console.log(`Radim u ${process.env.NODE_ENV} modu`.underline.blue);
@@ -20,7 +18,7 @@ const connectDB = () => {
       }
     })
     .catch((err) => {
-      ispisi('00- Spajanje na bazu nije uspjelo, db.js', 0);
+      console.log(err);
     });
 };
 

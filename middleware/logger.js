@@ -1,4 +1,4 @@
-const { ispisi } = require('../config/ispisi');
+var colors = require('colors');
 
 const logger = (req, res, next) => {
   req.hello = 'Pozdrav svijetu';
@@ -7,7 +7,7 @@ const logger = (req, res, next) => {
   );
   console.log(req.get('connection'));
   console.log(req.get('cookie'));
-
+  console.log(colors.yellow(req.body));
   next();
 };
 

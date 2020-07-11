@@ -13,7 +13,7 @@ exports.getCourses = async (req, res, next) => {
 
     if (req.params.bootcampId) {
       // ako trazimo pojedinacan course
-      const courses = Course.find({ bootcamp: req.params.bootcampId });
+      const courses = await Course.find({ bootcamp: req.params.bootcampId });
 
       return res.status(200).json({
         success: true,
@@ -163,8 +163,6 @@ exports.updateCourseOne = async (req, res, next) => {
 // @access    Private
 exports.deleteCourseOne = async (req, res, next) => {
   try {
-    console.log('req.params.id=', req.params.id);
-
     // Prvo tražimo u bootcamp i taj cemo spajati sa course
     const course = await Course.findById(req.params.id);
     
