@@ -7,7 +7,8 @@ const {
   forgotpassword,
   resetPassword,
   updateUserDetails,
-  updatePassword
+  updatePassword,
+  logout
 } = require('../controllers/authCtrl');
 
 const router = express.Router();
@@ -18,6 +19,7 @@ const { protect } = require('../middleware/auth');
 // dohvati sve
 router.route('/register').post(register);
 router.route('/login').post(login);
+router.get('/logout', logout);
 router.route('/me').get(protect, getMe);
 router.route('/updateuserdetails').put(protect, updateUserDetails);
 router.route('/updatepassword').put(protect,updatePassword);

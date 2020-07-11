@@ -86,6 +86,25 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+// @desc      Log user out / clear cookie
+// @route     GET /api/v1/auth/logout
+// @access    Private
+exports.logout = async (req, res, next) => {
+  try {
+    res.cookie('token', 'none', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    next(new ErrorResponse(error, 400));
+  }
+};
+
 ///////////////////////////////////////////////
 // @desc      UPDATE user details
 // @route     PUT /api/v1/auth/updateuserdetails
@@ -93,13 +112,13 @@ exports.getMe = async (req, res, next) => {
 exports.updateUserDetails = async (req, res, next) => {
   try {
     const poljaToUpdate = {
-      name :req.body.name,
-      email: req.body.email
-    }
+      name: req.body.name,
+      email: req.body.email,
+    };
 
     const user = await User.findByIdAndUpdate(req.user.id, poljaToUpdate, {
-      new:true,
-      runValidators: true
+      new: true,
+      runValidators: true,
     });
 
     res.status(200).json({
@@ -116,26 +135,25 @@ exports.updateUserDetails = async (req, res, next) => {
 // @route     PUT /api/v1/auth/updatepassword
 // @access    Private
 exports.updatePassword = async (req, res, next) => {
-  try { 
+  try {
     // za logiranog usera trazimo u bazi, selektiramo
     const user = await User.findById(req.user.id).select('+password');
 
-  //  Provjeri dali je password u bazi jednak unesenom, ako ne baci grešku
-    if(!(await user.matchPassword(req.body.currentPassword))) {
+    //  Provjeri dali je password u bazi jednak unesenom, ako ne baci grešku
+    if (!(await user.matchPassword(req.body.currentPassword))) {
       return next(new ErrorResponse('Password je neispravan', 400));
     }
 
     user.password = req.body.newPassword;
     // snimanje podataka
-    await user.save()
-    
+    await user.save();
+
     //šaljemo NOVI TOKEN token
     sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
 };
-
 
 ////////////////////////////////////////////////////////////
 // @desc      Zaboravio sam password
@@ -158,7 +176,9 @@ exports.forgotpassword = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -205,18 +225,18 @@ exports.resetPassword = async (req, res, next) => {
       resetPasswordExpire: { $gt: Date.now() },
     });
 
-      if (!user) {
-        return next(new ErrorResponse('Invalid token', 400));
-      }
+    if (!user) {
+      return next(new ErrorResponse('Invalid token', 400));
+    }
 
-      // Set new password
-      user.password = req.body.password;
-      // ove vrijednosti nam vise ne trabaju u bazi, brisemo ih
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save();
+    // Set new password
+    user.password = req.body.password;
+    // ove vrijednosti nam vise ne trabaju u bazi, brisemo ih
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
 
-      sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     console.log(error);
   }
@@ -227,11 +247,15 @@ exports.resetPassword = async (req, res, next) => {
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
-  // const token = user.getSignedJwtToken();  
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRE});
-  
+  // const token = user.getSignedJwtToken();
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+
   const options = {
-    expires: new Date( Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
     httpOnly: true,
   };
 
@@ -244,6 +268,6 @@ const sendTokenResponse = (user, statusCode, res) => {
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token: token,
-    user: user
+    user: user,
   });
 };
