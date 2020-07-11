@@ -3,7 +3,9 @@ const ErrorResponse = require('../utils/errorResponse');
 
 const errorHandlerSvi = (err, req, res, next) => {
   console.log('U errorHandlerSvi sam'.green);
-  console.log('err.name=',err.name,'err.code', err.code);
+  console.log(err);
+  
+  console.log('err.name=',err.name,'err.code=', err.code);
 
   let errorPrekoKlase = { ...err };
   errorPrekoKlase.message = err.message;

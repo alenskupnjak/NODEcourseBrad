@@ -57,7 +57,6 @@ CourseSchema.statics.getAverageCost = async function (bootcampId) {
     },
   ]);
 
-  console.log('obj', obj);
 
   try {
     // odlazi u model Bootcamp
