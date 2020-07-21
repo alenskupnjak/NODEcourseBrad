@@ -65,7 +65,7 @@ exports.login = async (req, res, next) => {
     }
 
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 200, res, req);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -218,6 +218,7 @@ exports.forgotpassword = async (req, res, next) => {
 // @access    Public
 exports.resetPassword = async (req, res, next) => {
   try {
+   
     // Get hashed token
     const resetPasswordToken = crypto
       .createHash('sha256')
@@ -249,8 +250,10 @@ exports.resetPassword = async (req, res, next) => {
 ////////////////////////////////////////////////////////////////
 //TOKEN
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = (user, statusCode, res, req) => {
   // Create token
+
+  
   // const token = user.getSignedJwtToken();
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -268,11 +271,12 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.secure = true;
   }
 
-  // saljemo TOKEN u browser.....
 
   //   res.render('login', {
   //   pageTitle: 'Check out',
   // });
+  // res.header('Authorization', 'Bearer '+ token);
+  console.log(req.headers);
   res.status(statusCode).cookie('token', token, options).render('index',{
     success: true,
     token: token,

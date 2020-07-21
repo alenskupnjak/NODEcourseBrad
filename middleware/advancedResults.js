@@ -1,12 +1,38 @@
 const advancedResults = (model, populate) => async (req, res, next) => {
   let query;
-
+  let poljaformeq = {...req.query}
+  console.log(poljaformeq);
+  
   // Copy req.query
   reqQuery = { ...req.query };
+  
+  
+  let poljaForme = Object.entries(req.query)
+
+  poljaForme.forEach(data=>{
+    console.log(data);
+    if (data[1] === '') {
+      console.log('imam te');
+      delete reqQuery[data[0]]
+    }
+  })
+
+  // console.log(req.reqQuery.averageCost);
+  
+
+  
+  console.log('****************',reqQuery);
+
+  ///api/v1/bootcamps/data?careers=&averageCost%5Blt%5D=2000
 
 
   // Fields to exclude
-  const removeFields = ['select', 'sort', 'page', 'limit'];
+  const removeFields = [
+    'select',
+    'sort',
+    'page',
+    'limit'
+  ];
 
   // Loop over remove fields and delete from reqQery
   removeFields.forEach((data) => {
@@ -79,11 +105,6 @@ const advancedResults = (model, populate) => async (req, res, next) => {
     pagination,
     data: results,
   };
-
-  res.slon = {
-    podatak: 'kaj gledas'
-  }
-
   next();
 };
 

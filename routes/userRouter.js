@@ -14,7 +14,6 @@ const User = require('../models/UserMod');
 const { protect, authorizeKorisnik } = require('../middleware/auth');
 const advancedResults = require('../middleware/advancedResults');
 
-
 const router = express.Router({ mergeParams: true });
 
 // na ovaj nacin je protext middelware postavljen na sve rute ispod
@@ -32,4 +31,5 @@ router
   .put(updateUser)
   .delete(deleteUser);
 
+  
 module.exports = router;

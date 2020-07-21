@@ -9,6 +9,7 @@ const router = express.Router();
 // dohvati sve
 router.route('/index').get(advancedResults(Bootcamp, 'courses'),viewCtrl.getIndex);
 router.route('/login').get(advancedResults(Bootcamp, 'courses'),viewCtrl.login);
+router.route('/register').get(advancedResults(Bootcamp, 'courses'),viewCtrl.register);
 
 
 module.exports = router;

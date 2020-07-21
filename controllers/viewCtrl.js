@@ -30,13 +30,27 @@ exports.login = (req, res, next) => {
     console.log('viewCtrl, bootcampCtrl.js'.magenta, req.user, res.proba);
     //  res.status(200).json(res.advancedResults);
      
-    
     res.status(200).render('login', {
       pageTitle: 'Check out',
     });
-
-  next();
   } catch (error) {
     return next( new ErrorResponse( `xxxxx ed to update this bootcamp`,401));  
+  }  
+};
+
+// @desc      Register
+// @route     GET /api/v1/view/register
+// @access    Public
+exports.register = (req, res, next) => {
+  try {
+    console.log('viewCtrl, bootcampCtrl.js'.magenta, req.user, res.proba);
+    //  res.status(200).json(res.advancedResults);
+     
+    res.status(200).render('register', {
+      pageTitle: 'Check out',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod registriranja`,401));  
   }  
 };

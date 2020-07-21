@@ -55,7 +55,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE, pokusni
-app.use(logger);
+// app.use(logger);
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {

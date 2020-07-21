@@ -7,7 +7,7 @@ const logger = (req, res, next) => {
   );
   console.log(req.get('connection'));
   console.log(req.get('cookie'));
-  console.log(colors.yellow(req.body));
+  console.log(colors.yellow.inverse(req.body));
   next();
 };
 
