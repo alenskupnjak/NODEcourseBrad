@@ -1,0 +1,42 @@
+const Bootcamp = require('../models/BootcampsMod');
+const asyncHandler = require('../middleware/async');
+
+const ErrorResponse = require('../utils/errorResponse');
+
+// @desc      Start page
+// @route     GET /api/v1/view/index
+// @access    Public
+exports.getIndex = (req, res, next) => {
+  try {
+    console.log('viewCtrl, bootcampCtrl.js'.magenta, req.user, res.proba);
+    //  res.status(200).json(res.advancedResults);
+     
+    res.status(200).render('index', {
+      pageTitle: 'Check out',
+      data: res.advancedResults
+    });
+
+  next();
+  } catch (error) {
+    return next( new ErrorResponse( `xxxxx ed to update this bootcamp`,401));  
+  }  
+};
+
+// @desc      Get all bootcamps
+// @route     GET /api/v1/view/login
+// @access    Public
+exports.login = (req, res, next) => {
+  try {
+    console.log('viewCtrl, bootcampCtrl.js'.magenta, req.user, res.proba);
+    //  res.status(200).json(res.advancedResults);
+     
+    
+    res.status(200).render('login', {
+      pageTitle: 'Check out',
+    });
+
+  next();
+  } catch (error) {
+    return next( new ErrorResponse( `xxxxx ed to update this bootcamp`,401));  
+  }  
+};

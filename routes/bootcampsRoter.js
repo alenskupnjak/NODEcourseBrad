@@ -37,7 +37,7 @@ router
 // dohvati sve
 router
   .route('/')
-  .get(protect, advancedResults(Bootcamp, 'courses'), getBootcamps)
+  .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
   .post(protect, authorizeKorisnik('publisher', 'admin'), createBootcamp);
 
 // dohvati jednog

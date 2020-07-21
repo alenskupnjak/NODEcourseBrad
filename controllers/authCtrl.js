@@ -37,6 +37,8 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log('-----------------------',req.body);
+    
 
     // Validate email & password
     if (!email || !password) {
@@ -150,6 +152,8 @@ exports.updatePassword = async (req, res, next) => {
 
     //šaljemo NOVI TOKEN token
     sendTokenResponse(user, 200, res);
+
+    res.redirect('/');
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -265,7 +269,11 @@ const sendTokenResponse = (user, statusCode, res) => {
   }
 
   // saljemo TOKEN u browser.....
-  res.status(statusCode).cookie('token', token, options).json({
+
+  //   res.render('login', {
+  //   pageTitle: 'Check out',
+  // });
+  res.status(statusCode).cookie('token', token, options).render('index',{
     success: true,
     token: token,
     user: user,

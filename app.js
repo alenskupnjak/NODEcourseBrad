@@ -2,6 +2,7 @@ const colors = require('colors');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser')
 const path = require('path');
+const bodyParser = require('body-parser');
 const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
@@ -29,11 +30,25 @@ const coursesRouter = require('./routes/coursesRouter');
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
 const reviewsRouter = require('./routes/reviewsRouter');
+const viewRouter = require('./routes/viewRouter');
 
 //inicijalizacija aplikacije
 const app = express();
 
+// definiramo template engine koji cemo koristiti u aplikaciji (EJS ili PUG ili express-handlebars)
+// app.set('view engine', 'pug'); // za pug
+app.set('view engine', 'ejs'); // za ejs
+// kreiramo stazu odakle cemo vuci template
+app.set('views', path.join(__dirname, 'public/views'));
+
 // Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
+app.use(express.json());
+
+// body -parser, bez ovoga ne salje podatke automatski kroz req.body (npm i body-parser)
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
 app.use(express.json());
 
 // Cookie parser, za slanje TOKENA
@@ -67,7 +82,7 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-app.use(limiter);
+// app.use(limiter);
 
 // Prevent http param pollution
 app.use(hpp());
@@ -76,12 +91,11 @@ app.use(hpp());
 app.use(cors());
 
 
-
-
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Mount routers
+app.use('/api/v1/view', viewRouter);
 app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
 app.use('/api/v1/auth', authRouter);
@@ -92,7 +106,7 @@ app.use('/api/v1/reviews', reviewsRouter );
 app.use(errorHandlerSvi);
 
 // definiranje porta
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 // prati zahtijeve koji stizu
 const server = app.listen(PORT, () => {

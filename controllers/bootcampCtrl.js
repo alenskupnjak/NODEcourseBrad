@@ -9,7 +9,16 @@ const ErrorResponse = require('../utils/errorResponse');
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
   console.log('getBootcamps, bootcampCtrl.js'.magenta, req.user, res.proba);
-  res.status(200).json(res.advancedResults);
+  // res.status(200).json(res.advancedResults);
+
+  res.render('bootcamps', {
+    pageTitle: 'Check out',
+  });
+
+
+
+
+  
 });
 
 // @desc      Get single bootcamp
