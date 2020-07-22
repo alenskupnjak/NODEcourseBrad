@@ -4,9 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "build": "SET NODE_ENV=production& nodemon app.js",
-    "testJest": "jest --watch"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
