@@ -18,7 +18,6 @@ const advancedResults = require('../middleware/advancedResults');
 const router = express.Router({ mergeParams: true });
 
 
-
 router
   .route('/')
   .get(

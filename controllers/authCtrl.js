@@ -78,8 +78,8 @@ exports.login = async (req, res, next) => {
 // @access    Private
 exports.getMe = async (req, res, next) => {
   try {
+
     console.log(req.user.id);
-    
     const user = await User.findById(req.user.id).select('+password');
 
     res.status(200).json({
@@ -273,15 +273,16 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.secure = true;
   }
 
-  // res.header('token', JSON.stringify({ token: 'token' }));
-  // res.status(statusCode).cookie('token', token, options).render('index',{
-  //   success: true,
-  //   token: token,
-  //   user: JSON.stringify(user)
-  // });
-  res.status(statusCode).cookie('token', token, options).json({
+
+  res.status(statusCode).cookie('token', token, options).render('index',{
     success: true,
     token: token,
-    user: user,
+    user: user
   });
+  
+  // res.status(statusCode).cookie('token', token, options).json({
+  //   success: true,
+  //   token: token,
+  //   user: user,
+  // });
 };

@@ -102,12 +102,12 @@
 				<!-- Sidebar -->
 				<div class="col-md-4">
 					<!-- Image -->
-					<img src="img/image_1.jpg" class="img-thumbnail" alt="">
+					<img src="/img/<%= bootCamp.photo%>" class="img-thumbnail" alt="">
 					<!-- Rating -->
 					<h1 class="text-center my-4"><span class="badge badge-secondary badge-success rounded-circle p-3">8.8</span>
 						Rating</h1>
 					<!-- Buttons -->
-					<a href="reviews.html" class="btn btn-dark btn-block my-3"><i class="fas fa-comments"></i> Read Reviews</a>
+					<a href="/api/v1/bootcamps/<%= bootCamp.id%>/reviews" class="btn btn-dark btn-block my-3"><i class="fas fa-comments"></i> Read Reviews</a>
 					<a href="add-review.html" class="btn btn-light btn-block my-3"><i class="fas fa-pencil-alt"></i> Write a
 						Review</a>
 					<a href="#" target="_blank" class="btn btn-secondary btn-block my-3"><i class="fas fa-globe"></i> Visit
@@ -124,6 +124,7 @@
 				</div>
 			</div>
 		</div>
+		<p><%= bootCamp%></p>
 	</section>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

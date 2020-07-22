@@ -11,11 +11,17 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
   if (req.params.bootcampId) {
     const reviews = await Review.find({ bootcamp: req.params.bootcampId });
 
-    return res.status(200).json({
+    res.status(200).render('reviews',{
       success: true,
       count: reviews.length,
-      data: reviews,
+      reviews: reviews,
     });
+
+    // return res.status(200).json({
+    //   success: true,
+    //   count: reviews.length,
+    //   reviews: reviews,
+    // });
   } else {
     res.status(200).json(res.advancedResults);
   }
