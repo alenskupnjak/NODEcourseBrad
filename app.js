@@ -39,7 +39,7 @@ const app = express();
 // app.set('view engine', 'pug'); // za pug
 app.set('view engine', 'ejs'); // za ejs
 // kreiramo stazu odakle cemo vuci template
-app.set('views', path.join(__dirname, 'public/views'));
+app.set('views', path.join(__dirname, 'views'));
 
 // Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
 app.use(express.json());
