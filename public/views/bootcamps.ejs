@@ -121,7 +121,9 @@
 				<!-- Main col -->
 				<div class="col-md-8">
 					<!-- Bootcamps -->
-					<% for (let data of bootcamps) {%>
+					<%- include('./bootcamps-list.ejs')%>
+					
+					<!-- <% for (let data of bootcamps) {%>
 					<div class="card mb-3">
 						<div class="row no-gutters">
 							<div class="col-md-4">
@@ -134,7 +136,7 @@
 											<span class="float-right badge badge-success">8.8</span></a>
 									</h5>
 									<span class="badge badge-dark mb-2"><%= data.location.city%>,<%= data.location.state%></span>
-									<!-- <span class="badge badge-dark mb-2">Boston, MA</span> -->
+				
 									<p class="card-text">
 										Web Development, UI/UX, Mobile Development
 									</p>
@@ -142,7 +144,8 @@
 							</div>
 						</div>
 					</div>
-					<% } %>
+					<% } %> -->
+
 					<!-- <div class="card mb-3">
 						<div class="row no-gutters">
 							<div class="col-md-4">

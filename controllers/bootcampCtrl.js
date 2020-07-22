@@ -11,7 +11,6 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   console.log('getBootcamps, bootcampCtrl.js'.magenta, req.user, res.proba);
   // res.status(200).json(res.advancedResults);
   const podaci = res.advancedResults.data;
-  console.log('-----------------------------');
   
   console.log(podaci);
 
