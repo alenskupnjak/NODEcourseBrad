@@ -7,10 +7,10 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
 
 // Load model
-const Bootcamp = require('./models/BootcampsMod');
-const Course = require('./models/CourseMod');
-const User = require('./models/UserMod');
-const Review = require('./models/ReviewMod');
+const Bootcamp = require('../models/BootcampsMod');
+const Course = require('../models/CourseMod');
+const User = require('../models/UserMod');
+const Review = require('../models/ReviewMod');
 
 // spajanje na 0Baa5idK2ZQuELRwPznQ
 const connectDB = () => {
