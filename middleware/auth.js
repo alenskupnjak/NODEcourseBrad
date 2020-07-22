@@ -20,7 +20,7 @@ exports.protect = async (req, res, next) => {
 
   // Make sure token exists
   if (!token) {
-    return next(new ErrorResponse('Not authorized to access this route', 401));
+    return next(new ErrorResponse('Nisi autoriziran authorized to access this route', 401));
   }
 
   try {
@@ -33,7 +33,7 @@ exports.protect = async (req, res, next) => {
 
     next();
   } catch (err) {
-    return next(new ErrorResponse('Not authorized to access this route', 401));
+    return next(new ErrorResponse('Not authorized to access this route !!!', 401));
   }
 };
 

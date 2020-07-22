@@ -13,10 +13,8 @@ exports.getIndex = (req, res, next) => {
      
     res.status(200).render('index', {
       pageTitle: 'Check out',
-      data: res.advancedResults
+      // data: res.advancedResults
     });
-
-  next();
   } catch (error) {
     return next( new ErrorResponse( `xxxxx ed to update this bootcamp`,401));  
   }  

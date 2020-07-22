@@ -39,31 +39,28 @@ exports.getBootcampsData= asyncHandler(async (req, res, next) => {
 // @access    Public
 exports.getBootcamp = asyncHandler(async (req, res, next) => {
   // try {
-  const bootCamps = await Bootcamp.findById(req.params.id).populate({
+  const bootCamp = await Bootcamp.findById(req.params.id).populate({
     path: 'courses',
     select: 'title weeks minimumSkill',
   });
 
-  if (!bootCamps) {
+  if (!bootCamp) {
     return next(
       new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
     );
   }
+console.log(bootCamp.courses);
 
-  res.status(200).json({
+  // res.status(200).json({
+  //   sucess: true,
+  //   msg: `Prikaži ${req.params.id}`,
+  //   data: bootCamp,
+  // });
+  res.status(200).render('bootcamp',{
     sucess: true,
     msg: `Prikaži ${req.params.id}`,
-    data: bootCamps,
+    bootCamp: bootCamp
   });
-  // } catch (error) {
-  //   ispisi('04- Očitavanje jednog zapisa, bootcampsCtrl.js', 0);
-  //   // next(new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404));
-  //   next(error);
-  //   // res.status(400).json({
-  //   //   sucess: false,
-  //   //   poruka: 'Očitavanje zapisa iz baze nije uspjelaccc',
-  //   // });
-  // }
 });
 
 //////////////////////////////////////////////////////

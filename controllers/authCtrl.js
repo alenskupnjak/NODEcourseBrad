@@ -38,6 +38,7 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     console.log('-----------------------',req.body);
+    // test017@yahoo.com   12345
     
 
     // Validate email & password
@@ -65,7 +66,7 @@ exports.login = async (req, res, next) => {
     }
 
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
-    sendTokenResponse(user, 200, res, req);
+    sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -77,6 +78,8 @@ exports.login = async (req, res, next) => {
 // @access    Private
 exports.getMe = async (req, res, next) => {
   try {
+    console.log(req.user.id);
+    
     const user = await User.findById(req.user.id).select('+password');
 
     res.status(200).json({
@@ -250,10 +253,9 @@ exports.resetPassword = async (req, res, next) => {
 ////////////////////////////////////////////////////////////////
 //TOKEN
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res, req) => {
+const sendTokenResponse = (user, statusCode, res) => {
   // Create token
 
-  
   // const token = user.getSignedJwtToken();
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -271,13 +273,13 @@ const sendTokenResponse = (user, statusCode, res, req) => {
     options.secure = true;
   }
 
-
-  //   res.render('login', {
-  //   pageTitle: 'Check out',
+  // res.header('token', JSON.stringify({ token: 'token' }));
+  // res.status(statusCode).cookie('token', token, options).render('index',{
+  //   success: true,
+  //   token: token,
+  //   user: JSON.stringify(user)
   // });
-  // res.header('Authorization', 'Bearer '+ token);
-  console.log(req.headers);
-  res.status(statusCode).cookie('token', token, options).render('index',{
+  res.status(statusCode).cookie('token', token, options).json({
     success: true,
     token: token,
     user: user,

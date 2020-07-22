@@ -49,7 +49,7 @@ router
 // dohvati jednog
 router
   .route('/:id')
-  .get(getBootcamp)
+  .get(protect,getBootcamp)
   .put(protect, authorizeKorisnik('publisher', 'admin'), updateBootcamp)
   .delete(protect, authorizeKorisnik('publisher', 'admin'), deleteBootcamp);
 

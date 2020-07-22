@@ -7,7 +7,6 @@
 		<script src="https://kit.fontawesome.com/3da1a747b2.js"></script>
 		<link rel="stylesheet" href="/css/bootstrap.css" />
 		<link rel="stylesheet" href="/css/style.css" />
-		<link rel="stylesheet" href="/css/moj.css" />
 		<title>DevCamper | Find a coding bootcamp</title>
 	</head>
 	<body>
@@ -62,6 +61,7 @@
 									bootcamps
 								</p>
 								<form action="/api/v1/auth/login" method="POST">
+								<!-- <form> -->
 									<div class="form-group">
 										<label for="email">Email Address</label>
 										<input
@@ -90,6 +90,7 @@
 										<input
 											type="submit"
 											value="Login"
+											id='loginBtn'
 											class="btn btn-primary btn-block"
 										/>
 									</div>
@@ -102,7 +103,18 @@
 			</div>
 
 		</section>
-		<script scr="/js/index.js"></script>
+		<script >
+		 const loginBtn = document.getElementById('loginBtn')
+		 
+		 loginBtn.addEventListener('click', e =>{
+			 e.preventDefault();
+			location.assign('../../../add-course.html');
+			// location.href = 'add-course.html';
+			 console.log('tu sam');
+			 console.log(e);
+		 })
+		
+		</script>
 
 		<script
 			src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

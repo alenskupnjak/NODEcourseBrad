@@ -83,6 +83,6 @@ exports.deleteUser = async (req, res, next) => {
       poruka: 'Korisnik obrisan'
     });
   } catch (error) {
-    return next(new ErrorResponse(error, 400));
+    return next(new ErrorResponse('User role user is not authorized to access this route!!', 400));
   }
 };
