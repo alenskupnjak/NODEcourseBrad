@@ -88,3 +88,52 @@ exports.manageBootcamp = (req, res, next) => {
     return next( new ErrorResponse( `Greška kod registriranja`,401));  
   }  
 };
+
+
+// @desc      Upravljanje
+// @route     GET /api/v1/view/manage-bootcamp
+// @access    Private
+exports.manageAccount = (req, res, next) => {
+  try {
+     
+    res.status(200).render('manage-account', {
+      pageTitle: 'Manage-account',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod registriranja`,401));  
+  }  
+};
+
+
+// @desc      Upravljanje
+// @route     GET /api/v1/view/manage-bootcamp
+// @access    Public
+exports.updatePassword = (req, res, next) => {
+  try {
+    console.log(req.user)
+    
+    res.status(200).render('update-password', {
+      pageTitle: 'update-password',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod registriranja`,401));  
+  }  
+};
+
+
+
+// @desc      Upravljanje Revews
+// @route     GET /api/v1/view/manage-reviews
+// @access    Public
+exports.manageReviews = (req, res, next) => {
+  try {
+    res.status(200).render('manage-reviews', {
+      pageTitle: 'manage-reviews',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod manageReviews`,401));  
+  }  
+};
