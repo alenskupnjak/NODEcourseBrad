@@ -1,13 +1,6 @@
 const express = require('express');
 
-const {
-  getUsers,
-  getOneUser,
-  createUser,
-  updateUser,
-  deleteUser,
-} = require('../controllers/userCtrl');
-
+const userController = require('../controllers/userCtrl');
 const User = require('../models/UserMod');
 
 // štiti rute od neulogiranih usera
@@ -22,14 +15,16 @@ router.use(authorizeKorisnik('admin'))
 
 router
   .route('/')
-  .get(advancedResults(User) ,getUsers)
-  .post(createUser);
+  .get(advancedResults(User) , userController.getUsers)
+  .post( userController.createUser);
+
+
 
 router
   .route('/:id')
-  .get(getOneUser)
-  .put(updateUser)
-  .delete(deleteUser);
+  .get( userController.getOneUser)
+  .put( userController.updateUser)
+  .delete( userController.deleteUser);
 
   
 module.exports = router;

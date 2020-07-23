@@ -52,3 +52,21 @@ exports.register = (req, res, next) => {
     return next( new ErrorResponse( `Greška kod registriranja`,401));  
   }  
 };
+
+
+// @desc      Zaboravljena lozinka
+// @route     GET /api/v1/view/forgotpassword
+// @access    Public
+exports.forgotpassword = (req, res, next) => {
+  try {
+    console.log('viewCtrl, forgotpassword'.magenta.inverse, req.user);
+    //  res.status(200).json(res.advancedResults);
+     
+    res.status(200).render('reset-password', {
+      pageTitle: 'Reset password',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod registriranja`,401));  
+  }  
+};

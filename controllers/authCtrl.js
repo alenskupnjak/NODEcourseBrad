@@ -37,9 +37,8 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log('-----------------------',req.body);
+    console.log('-----------------------', req.body);
     // test017@yahoo.com   12345
-    
 
     // Validate email & password
     if (!email || !password) {
@@ -78,7 +77,6 @@ exports.login = async (req, res, next) => {
 // @access    Private
 exports.getMe = async (req, res, next) => {
   try {
-
     console.log(req.user.id);
     const user = await User.findById(req.user.id).select('+password');
 
@@ -173,7 +171,12 @@ exports.forgotpassword = async (req, res, next) => {
 
     // ako nema ragistriranog korisnika pod tim emailom, javlja grešku
     if (!user) {
-      return next(new ErrorResponse('Takav korisni ne postoji!', 400));
+      return next(
+        new ErrorResponse(
+          `Korisnik  ${req.body.email}\n ne postoji, molimo da se registrirate!`,
+          400
+        )
+      );
     }
 
     // Resetiraj TOKEN za ovog korisnika
@@ -183,9 +186,7 @@ exports.forgotpassword = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -205,7 +206,6 @@ exports.forgotpassword = async (req, res, next) => {
       console.log(error);
     }
   } catch (error) {
-    console.log(err);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -221,7 +221,6 @@ exports.forgotpassword = async (req, res, next) => {
 // @access    Public
 exports.resetPassword = async (req, res, next) => {
   try {
-   
     // Get hashed token
     const resetPasswordToken = crypto
       .createHash('sha256')
@@ -273,13 +272,12 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.secure = true;
   }
 
-
-  res.status(statusCode).cookie('token', token, options).render('index',{
+  res.status(statusCode).cookie('token', token, options).render('index', {
     success: true,
     token: token,
-    user: user
+    user: user,
   });
-  
+
   // res.status(statusCode).cookie('token', token, options).json({
   //   success: true,
   //   token: token,

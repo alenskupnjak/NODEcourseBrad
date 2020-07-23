@@ -10,6 +10,7 @@ const router = express.Router();
 router.route('/index').get(advancedResults(Bootcamp, 'courses'),viewCtrl.getIndex);
 router.route('/login').get(advancedResults(Bootcamp, 'courses'),viewCtrl.login);
 router.route('/register').get(advancedResults(Bootcamp, 'courses'),viewCtrl.register);
+router.route('/forgotpassword').get(advancedResults(Bootcamp, 'courses'),viewCtrl.forgotpassword);
 
 
 module.exports = router;

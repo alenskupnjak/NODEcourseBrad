@@ -29,7 +29,7 @@ const errorHandlerSvi = (err, req, res, next) => {
     errorPrekoKlase = new ErrorResponse(message, 400);
   }
 
-  res.status(errorPrekoKlase.statusCode || 500).json({
+  res.status(errorPrekoKlase.statusCode || 500).render('error',{
     sucess: false,
     error: errorPrekoKlase.message || 'Server error',
     statuscode: errorPrekoKlase.statusCode,
