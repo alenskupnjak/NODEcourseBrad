@@ -88,13 +88,10 @@ exports.createBootcamp = async (req, res, next) => {
     res.status(201).json({
       sucess: true,
       msg: 'Kreiraj bootcamps',
+      bootcamp: bootcamp
     });
   } catch (error) {
-    next(error);
-    // res.status(400).json({
-    //   sucess: false,
-    //   poruka: 'Greška kod zapisa',
-    // });
+    next(new ErrorResponse(`Problem sa kreiranjem bootcampa ${req.params.id}`, 404));
   }
 };
 
@@ -157,7 +154,6 @@ exports.deleteBootcamp = async (req, res, next) => {
 
     // nije našao zapis u bazi, javlja grešku
     if (!bootcamp) {
-      console.log('*****'.blue);
       console.log(' ovdije nikad nece doci.......');
       return next(
         new ErrorResponse('Nije naso zapis u bazi, ne moze obrisati', 404)

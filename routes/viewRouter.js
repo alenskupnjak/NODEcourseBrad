@@ -11,6 +11,7 @@ router.route('/index').get(advancedResults(Bootcamp, 'courses'),viewCtrl.getInde
 router.route('/login').get(advancedResults(Bootcamp, 'courses'),viewCtrl.login);
 router.route('/register').get(advancedResults(Bootcamp, 'courses'),viewCtrl.register);
 router.route('/forgotpassword').get(advancedResults(Bootcamp, 'courses'),viewCtrl.forgotpassword);
+router.route('/manage-bootcamp').get(advancedResults(Bootcamp, 'courses'),viewCtrl.manageBootcamp);
 
 
 module.exports = router;

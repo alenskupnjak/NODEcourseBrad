@@ -70,3 +70,21 @@ exports.forgotpassword = (req, res, next) => {
     return next( new ErrorResponse( `Greška kod registriranja`,401));  
   }  
 };
+
+
+// @desc      Upravljanje
+// @route     GET /api/v1/view/manage-bootcamp
+// @access    Public
+exports.manageBootcamp = (req, res, next) => {
+  try {
+    console.log('/api/v1/view/manage-bootcamp, forgotpassword'.magenta.inverse, req.user);
+    //  res.status(200).json(res.advancedResults);
+     
+    res.status(200).render('manage-bootcamp', {
+      pageTitle: 'Manage Bootcamp',
+      data: res.advancedResults
+    });
+  } catch (error) {
+    return next( new ErrorResponse( `Greška kod registriranja`,401));  
+  }  
+};

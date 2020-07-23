@@ -252,7 +252,6 @@ exports.resetPassword = async (req, res, next) => {
     // user.resetPasswordToken = undefined;
     // user.resetPasswordExpire = undefined;
     await user.save();
-console.log('777777777777');
 
     sendTokenResponse(user, 200, res);
   } catch (error) {
