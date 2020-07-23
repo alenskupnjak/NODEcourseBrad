@@ -5,6 +5,7 @@ const ErrorResponse = require('../utils/errorResponse');
 // const bcryptjs = require('bcryptjs');
 const sendEmail = require('../utils/sendEmail');
 const jwt = require('jsonwebtoken');
+const colors = require('colors');
 
 /////////////////////////////////////////////////////////
 // @desc      Register user
@@ -38,7 +39,6 @@ exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     console.log('-----------------------', req.body);
-    // test017@yahoo.com   12345
 
     // Validate email & password
     if (!email || !password) {
@@ -178,7 +178,8 @@ exports.forgotpassword = async (req, res, next) => {
         )
       );
     }
-
+      console.log('1111111');
+      
     // Resetiraj TOKEN za ovog korisnika
     const resetToken = user.getResetPasswordToken();
 
@@ -197,11 +198,14 @@ exports.forgotpassword = async (req, res, next) => {
         subject: 'Password reset token',
         message: message,
       });
-      res.status(200).json({
+
+      res.status(200).render('send-mail-reset-password-alert', {
         success: true,
+        pageTitle: 'Check email',
         data: 'Email sent',
         email: req.body.email,
       });
+
     } catch (error) {
       console.log(error);
     }
@@ -221,6 +225,12 @@ exports.forgotpassword = async (req, res, next) => {
 // @access    Public
 exports.resetPassword = async (req, res, next) => {
   try {
+    console.log('-----------------------');
+    console.log(req.body);
+    if(req.body.password  !== req.body.passwordConfirm) {
+       return next(new ErrorResponse('Passwordi se ne podudaraju', 400));
+    }
+    
     // Get hashed token
     const resetPasswordToken = crypto
       .createHash('sha256')
@@ -239,13 +249,67 @@ exports.resetPassword = async (req, res, next) => {
     // Set new password
     user.password = req.body.password;
     // ove vrijednosti nam vise ne trabaju u bazi, brisemo ih
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+    // user.resetPasswordToken = undefined;
+    // user.resetPasswordExpire = undefined;
     await user.save();
+console.log('777777777777');
 
     sendTokenResponse(user, 200, res);
   } catch (error) {
-    console.log(error);
+    next(new ErrorResponse(error, 400));
+  }
+};
+
+// @desc      Reset password
+// @route     GET /api/v1/auth/resetpassword/:resettoken
+// @access    Public
+exports.getResetPassword = async (req, res, next) => {
+  try {
+    // Get hashed token
+    const resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(req.params.resettoken)
+      .digest('hex');
+
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return next(new ErrorResponse('Takav korisnik ne postoji', 400));
+    }
+
+    // user je detektiran
+    console.log(colors.green.inverse(user._id));
+    // const token = user.getSignedJwtToken();
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRE,
+    });
+
+    
+    const options = {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+    };
+    
+
+    if (process.env.NODE_ENV === 'production') {
+      console.log('production'.green);
+      options.secure = true;
+    }
+    
+    res.status(222).cookie('token', token, options).render('reset-password', {
+      success: true,
+      pageTitle: 'Reset password',
+      resettoken: req.params.resettoken,
+      user: user,
+    });
+
+  } catch (error) {
+    next(new ErrorResponse('Invalid token xxxx', 400));
   }
 };
 

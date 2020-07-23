@@ -62,7 +62,7 @@ exports.forgotpassword = (req, res, next) => {
     console.log('viewCtrl, forgotpassword'.magenta.inverse, req.user);
     //  res.status(200).json(res.advancedResults);
      
-    res.status(200).render('reset-password', {
+    res.status(200).render('reset-password-mail', {
       pageTitle: 'Reset password',
       data: res.advancedResults
     });

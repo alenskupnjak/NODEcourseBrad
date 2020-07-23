@@ -7,24 +7,27 @@ const sendEmail = async (options) => {
   // Only needed if you don't have a real mail account for testing
   // let testAccount = await nodemailer.createTestAccount();
 
-  // // create NODEMAILER transporter object using the default SMTP transport
-  // let transporter = nodemailer.createTransport({
-  //   host: process.env.SMTP_HOST,
-  //   port: process.env.SMTP_PORT,
-  //   secure: false, // true for 465, false for other ports
-  //   auth: {
-  //     user: process.env.SMTP_EMAIL, // generated ethereal user
-  //     pass:process.env.SMTP_PASSWORD, // generated ethereal password
-  //   },
-  // });
 
+  // create NODEMAILER transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.GMAIL_EMAIL,
-      pass: process.env.GMAIL_PASSWORD,
+      user: process.env.SMTP_EMAIL, // generated ethereal user
+      pass:process.env.SMTP_PASSWORD, // generated ethereal password
     },
   });
+
+
+  // // GMAIL 
+  // let transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: process.env.GMAIL_EMAIL,
+  //     pass: process.env.GMAIL_PASSWORD,
+  //   },
+  // });
 
   // send mail with defined transport object
   let info = await transporter.sendMail({

@@ -13,11 +13,7 @@
 		<!-- Navbar -->
 		<%- include('./insertview/navigationLoginRegister.ejs')%>
 
-		<p class="lead">
-			error: errorPrekoKlase.message || 'Server error',
-			statuscode: errorPrekoKlase.statusCode,
-		</p>
-
+		
 		<section class="form mt-5">
 			<div class="container">
 				<div class="row">
@@ -25,32 +21,19 @@
 						<div class="card bg-white p-4 mb-4">
 							<div class="card-body">
 								<h1><i class="fas fa-exclamation-circle"></i> Greška</h1>
-					
-						
-
+								
+								<p class="lead">
+									error: errorPrekoKlase.message || 'Server error',
+									statuscode: errorPrekoKlase.statusCode,
+								</p>
+								
 								<p>
 									<%= error %>
 								</p>
 
 								<p>
-									<%= statuscode %>
+									Statuscode: <%= statuscode %>
 								</p>
-								<!-- <form action="/api/v1/auth/login" method="POST">
-									<div class="form-group">
-										<label for="email">Email Address</label>
-										<input type="email" name="email" id="email" class="form-control" placeholder="Enter email"
-											value="john@yahoo.com" required />
-									</div>
-									<div class="form-group mb-4">
-										<label for="password">Password</label>
-										<input type="password" name="password" id="password" class="form-control" placeholder="Enter password"
-											value="1234" required />
-									</div>
-									<div class="form-group">
-										<input type="submit" value="Login" id='loginBtn' class="btn btn-primary btn-block" />
-									</div>
-								</form> -->
-								<!-- <p> Forgot Password? <a href="/api/v1/view/forgotpassword" method="POST">Reset Password</a></p> -->
 							</div>
 						</div>
 					</div>
