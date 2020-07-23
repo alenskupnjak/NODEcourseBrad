@@ -112,7 +112,6 @@ exports.manageAccount = (req, res, next) => {
 exports.updatePassword = (req, res, next) => {
   try {
     console.log(req.user)
-    
     res.status(200).render('update-password', {
       pageTitle: 'update-password',
       data: res.advancedResults

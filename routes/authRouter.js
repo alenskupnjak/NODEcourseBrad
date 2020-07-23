@@ -13,7 +13,7 @@ router.route('/login').post(authController.login);
 router.get('/logout', authController.logout);
 router.route('/me').get(protect, authController.getMe);
 router.route('/updateuserdetails').put(protect, authController.updateUserDetails);
-router.route('/updatepassword').put(protect, authController.updatePassword);
+router.route('/updatepassword').post(protect, authController.updatePassword);
 router.put('/resetpassword/:resettoken', authController.resetPassword);
 router.post('/resetpassword/:resettoken', authController.resetPassword);
 router.get('/resetpassword/:resettoken', authController.getResetPassword);

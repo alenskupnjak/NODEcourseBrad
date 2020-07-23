@@ -7,7 +7,7 @@ const advancedResults = require('../middleware/advancedResults');
 const { protect } = require('../middleware/auth');
 
 const router = express.Router();
-// dohvati sve
+// PATH /api/v1/view
 router.route('/index').get(advancedResults(Bootcamp, 'courses'),viewCtrl.getIndex);
 router.route('/login').get(advancedResults(Bootcamp, 'courses'),viewCtrl.login);
 router.route('/register').get(advancedResults(Bootcamp, 'courses'),viewCtrl.register);

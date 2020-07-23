@@ -80,7 +80,7 @@ exports.getMe = async (req, res, next) => {
     console.log(req.user.id);
     const user = await User.findById(req.user.id).select('+password');
     console.log(user);
-    
+
     res.status(200).json({
       success: true,
       data: user,
@@ -140,6 +140,11 @@ exports.updateUserDetails = async (req, res, next) => {
 // @access    Private
 exports.updatePassword = async (req, res, next) => {
   try {
+    console.log(req.body.currentPassword);
+
+    if (req.body.newPassword !== req.body.newPasswordConfirm) {
+      return next(new ErrorResponse('Upisani novi passwordi se razlikuju', 400));
+    }
     // za logiranog usera trazimo u bazi, selektiramo
     const user = await User.findById(req.user.id).select('+password');
 
@@ -155,7 +160,7 @@ exports.updatePassword = async (req, res, next) => {
     //šaljemo NOVI TOKEN token
     sendTokenResponse(user, 200, res);
 
-    res.redirect('/');
+    // res.redirect('/');
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -179,8 +184,8 @@ exports.forgotpassword = async (req, res, next) => {
         )
       );
     }
-      console.log('1111111');
-      
+    console.log('1111111');
+
     // Resetiraj TOKEN za ovog korisnika
     const resetToken = user.getResetPasswordToken();
 
@@ -188,7 +193,9 @@ exports.forgotpassword = async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -206,7 +213,6 @@ exports.forgotpassword = async (req, res, next) => {
         data: 'Email sent',
         email: req.body.email,
       });
-
     } catch (error) {
       console.log(error);
     }
@@ -228,10 +234,10 @@ exports.resetPassword = async (req, res, next) => {
   try {
     console.log('-----------------------');
     console.log(req.body);
-    if(req.body.password  !== req.body.passwordConfirm) {
-       return next(new ErrorResponse('Passwordi se ne podudaraju', 400));
+    if (req.body.password !== req.body.passwordConfirm) {
+      return next(new ErrorResponse('Passwordi se ne podudaraju', 400));
     }
-    
+
     // Get hashed token
     const resetPasswordToken = crypto
       .createHash('sha256')
@@ -287,27 +293,24 @@ exports.getResetPassword = async (req, res, next) => {
       expiresIn: process.env.JWT_EXPIRE,
     });
 
-    
     const options = {
       expires: new Date(
         Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
       ),
       httpOnly: true,
     };
-    
 
     if (process.env.NODE_ENV === 'production') {
       console.log('production'.green);
       options.secure = true;
     }
-    
+
     res.status(222).cookie('token', token, options).render('reset-password', {
       success: true,
       pageTitle: 'Reset password',
       resettoken: req.params.resettoken,
       user: user,
     });
-
   } catch (error) {
     next(new ErrorResponse('Invalid token xxxx', 400));
   }
