@@ -142,6 +142,8 @@ exports.updateUserDetails = async (req, res, next) => {
   }
 };
 
+
+
 /////////////////////////////////////////////////////////
 // @desc      UPDATE password
 // @route     PUT /api/v1/auth/updatepassword
@@ -173,6 +175,8 @@ exports.updatePassword = async (req, res, next) => {
     return next(new ErrorResponse(error, 400));
   }
 };
+
+
 
 ////////////////////////////////////////////////////////////
 // @desc      Zaboravio sam password
@@ -246,6 +250,7 @@ exports.forgotpassword = async (req, res, next) => {
   }
 };
 
+
 // @desc      Reset password
 // @route     PUT /api/v1/auth/resetpassword/:resettoken
 // @access    Public
@@ -284,6 +289,8 @@ exports.resetPassword = async (req, res, next) => {
     next(new ErrorResponse(error, 400));
   }
 };
+
+
 
 // @desc      Dobivamo LINK od usera za Reset password
 // @route     GET /api/v1/auth/resetpassword/:resettoken
@@ -334,6 +341,8 @@ exports.getResetPassword = async (req, res, next) => {
     next(new ErrorResponse('Invalid token xxxx', 400));
   }
 };
+
+
 
 ////////////////////////////////////////////////////////////////
 //TOKEN

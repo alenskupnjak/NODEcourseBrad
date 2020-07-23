@@ -154,7 +154,7 @@ exports.deleteReview = async (req, res, next) => {
 
     // Make sure review belongs to user or user is admin
     if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`Not authorized to update review`, 401));
+      return next(new ErrorResponse(`Not authorized to delete review`, 401));
     }
 
     await review.remove();
