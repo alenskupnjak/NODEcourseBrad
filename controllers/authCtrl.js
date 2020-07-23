@@ -38,7 +38,6 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log('-----------------------', req.body);
 
     // Validate email & password
     if (!email || !password) {
@@ -47,6 +46,7 @@ exports.login = async (req, res, next) => {
 
     // Check for user
     const user = await User.findOne({ email: email }).select('+password');
+    console.log(user);
 
     // ako nema usera u bazi javlja grešku
     if (!user) {
@@ -65,6 +65,10 @@ exports.login = async (req, res, next) => {
     }
 
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
+    console.log('-----------------------', req.body);
+    user.postmanLogin = req.body.postmanLogin;
+    console.log('mmmm', user);
+
     sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -116,7 +120,7 @@ exports.logout = async (req, res, next) => {
 exports.updateUserDetails = async (req, res, next) => {
   try {
     console.log(req.user);
-    
+
     const poljaToUpdate = {
       name: req.body.name,
       email: req.body.email,
@@ -127,7 +131,7 @@ exports.updateUserDetails = async (req, res, next) => {
       runValidators: true,
     });
 
-    res.status(200).render('index',{
+    res.status(200).render('index', {
       success: true,
       data: user,
     });
@@ -142,9 +146,10 @@ exports.updateUserDetails = async (req, res, next) => {
 // @access    Private
 exports.updatePassword = async (req, res, next) => {
   try {
-
     if (req.body.newPassword !== req.body.newPasswordConfirm) {
-      return next(new ErrorResponse('Upisani novi passwordi se razlikuju', 400));
+      return next(
+        new ErrorResponse('Upisani novi passwordi se razlikuju', 400)
+      );
     }
     // za logiranog usera trazimo u bazi, selektiramo
     const user = await User.findById(req.user.id).select('+password');
@@ -340,15 +345,19 @@ const sendTokenResponse = (user, statusCode, res) => {
     options.secure = true;
   }
 
-  res.status(statusCode).cookie('token', token, options).render('index', {
-    success: true,
-    token: token,
-    user: user,
-  });
+  // ako upit dolazi iz postmana Postman dobiva svoj token, a HTML svoj token
+  if (user.postmanLogin) {
+    res.status(statusCode).cookie('token', token, options).json({
+      success: true,
+      token: token,
+      user: user,
+    });
 
-  // res.status(statusCode).cookie('token', token, options).json({
-  //   success: true,
-  //   token: token,
-  //   user: user,
-  // });
+  } else {
+    res.status(statusCode).cookie('token', token, options).render('index', {
+      success: true,
+      token: token,
+      user: user,
+    });
+  }
 };

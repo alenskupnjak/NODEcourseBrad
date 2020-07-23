@@ -26,25 +26,21 @@
 						Bootcamp Info</a>
 					<h1 class="mb-4">DevWorks Bootcamp Reviews</h1>
 					<!-- Reviews -->
+					<% for (let data of reviews) {%>
 					<div class="card mb-3">
-						<h5 class="card-header bg-dark text-white">Fantastic Bootcamp</h5>
+						<h5 class="card-header bg-dark text-white"><%= data.title %></h5>
 						<div class="card-body">
 							<h5 class="card-title">
-								Rating: <span class="text-success">10</span>
+								Rating: <span class="text-success"><%= data.rating %></span>
 							</h5>
 							<p class="card-text">
-								Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-								Commodi similique mollitia, praesentium, animi harum officia
-								dolores corporis ex tempore consequuntur dolorem ullam dolorum
-								magnam corrupti quaerat tempora repudiandae! Similique,
-								molestiae. Iste, blanditiis recusandae unde tenetur eius
-								exercitationem rerum a fuga.
+								<%= data.text %>
 							</p>
 							<p class="text-muted">Writtern By Kevin Smith</p>
 						</div>
 					</div>
 
-
+					<% } %>
 
 				</div>
 				<!-- Sidebar -->

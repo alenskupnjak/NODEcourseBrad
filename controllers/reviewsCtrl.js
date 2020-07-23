@@ -70,9 +70,12 @@ exports.getReview = async (req, res, next) => {
 exports.addReview = async (req, res, next) => {
   try {
 
+console.log('********addReview  **************');
 
     req.body.bootcamp = req.params.bootcampId;
     req.body.user = req.user.id;
+    console.log(req.body.bootcamp );
+    
 
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 

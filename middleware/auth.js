@@ -7,6 +7,7 @@ const colors = require('colors');
 // Protect routes
 exports.protect = async (req, res, next) => {
   let token;
+  console.log(colors.bgRed( req.headers.authorization ));
 
   if (
     req.headers.authorization &&
@@ -20,20 +21,27 @@ exports.protect = async (req, res, next) => {
 
   // Make sure token exists
   if (!token) {
-    return next(new ErrorResponse('Nisi autoriziran authorized to access this route', 401));
+    return next(
+      new ErrorResponse('Nisi autoriziran authorized to access this route', 401)
+    );
   }
 
   try {
+    
     // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    console.log(decoded);
+    
     // ovaj user se koristi dalje u programu
     req.user = await User.findById(decoded.id);
-    res.proba = 'probni text, provlaci se kroz cijeli program..';
-
+    console.log('---------------------');
+    
+    console.log(req.user);
     next();
   } catch (err) {
-    return next(new ErrorResponse('Not authorized to access this route !!!', 401));
+    return next(
+      new ErrorResponse('Not authorized to access this route !!!', 401)
+    );
   }
 };
 
@@ -56,8 +64,8 @@ exports.authorize = (...roles) => {
 // Grant access to specific roles
 exports.authorizeKorisnik = (...roles) => {
   return (req, res, next) => {
+    console.log('roles**********'.bgRed, roles, req.user.role);
     if (roles.includes(req.user.role)) {
-      console.log('roles**********'.bgRed, roles);
       // User je ovlašten, nastavlja sa radom
       return next();
     }
