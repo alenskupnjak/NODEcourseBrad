@@ -11,6 +11,9 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
   if (req.params.bootcampId) {
     const reviews = await Review.find({ bootcamp: req.params.bootcampId });
 
+    console.log(reviews);
+    
+
     res.status(200).render('reviews',{
       success: true,
       count: reviews.length,
@@ -66,6 +69,8 @@ exports.getReview = async (req, res, next) => {
 // @access    Private
 exports.addReview = async (req, res, next) => {
   try {
+
+
     req.body.bootcamp = req.params.bootcampId;
     req.body.user = req.user.id;
 

@@ -115,6 +115,8 @@ exports.logout = async (req, res, next) => {
 // @access    Private
 exports.updateUserDetails = async (req, res, next) => {
   try {
+    console.log(req.user);
+    
     const poljaToUpdate = {
       name: req.body.name,
       email: req.body.email,
@@ -125,7 +127,7 @@ exports.updateUserDetails = async (req, res, next) => {
       runValidators: true,
     });
 
-    res.status(200).json({
+    res.status(200).render('index',{
       success: true,
       data: user,
     });
@@ -140,7 +142,6 @@ exports.updateUserDetails = async (req, res, next) => {
 // @access    Private
 exports.updatePassword = async (req, res, next) => {
   try {
-    console.log(req.body.currentPassword);
 
     if (req.body.newPassword !== req.body.newPasswordConfirm) {
       return next(new ErrorResponse('Upisani novi passwordi se razlikuju', 400));

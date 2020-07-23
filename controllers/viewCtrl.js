@@ -95,10 +95,11 @@ exports.manageBootcamp = (req, res, next) => {
 // @access    Private
 exports.manageAccount = (req, res, next) => {
   try {
-     
+    console.log(req.user)
     res.status(200).render('manage-account', {
       pageTitle: 'Manage-account',
-      data: res.advancedResults
+      data: res.advancedResults,
+      user:req.user
     });
   } catch (error) {
     return next( new ErrorResponse( `Greška kod registriranja`,401));  
@@ -107,7 +108,7 @@ exports.manageAccount = (req, res, next) => {
 
 
 // @desc      Upravljanje
-// @route     GET /api/v1/view/manage-bootcamp
+// @route     GET /api/v1/view/update-password
 // @access    Public
 exports.updatePassword = (req, res, next) => {
   try {
