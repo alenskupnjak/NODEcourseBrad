@@ -7,28 +7,40 @@ const Bootcamp = require('../models/BootcampsMod');
 // @route     GET /api/v1/reviews
 // @route     GET /api/v1/bootcamps/:bootcampId/reviews
 // @access    Public
-exports.getReviews = asyncHandler(async (req, res, next) => {
-  if (req.params.bootcampId) {
-    const reviews = await Review.find({ bootcamp: req.params.bootcampId });
+exports.getReviews = async (req, res, next) => {
+  try {
+    if (req.params.bootcampId) {
+      const reviews = await Review.find({
+        bootcamp: req.params.bootcampId,
+      }).populate({
+        path: 'bootcamp user',
+        select: 'name description email',
+      });
 
-    console.log(reviews);
-    
 
-    res.status(200).render('reviews',{
-      success: true,
-      count: reviews.length,
-      reviews: reviews,
-    });
+      console.log(req.pokus1, res.postmanLogin, req.postmanLogin, req.hello);
 
-    // return res.status(200).json({
-    //   success: true,
-    //   count: reviews.length,
-    //   reviews: reviews,
-    // });
-  } else {
-    res.status(200).json(res.advancedResults);
+      res.status(200).render('reviews',{
+        success: true,
+        count: reviews.length,
+        reviews: reviews,
+      });
+      console.log(reviews);
+
+      // return res.status(200).json({
+      //   success: true,
+      //   count: reviews.length,
+      //   reviews: reviews,
+      // });
+    } else {
+      res.status(200).json(res.advancedResults);
+    }
+  } catch (error) {
+    next(
+      new ErrorResponse(`No review found with the id of ${req.params.id}`, 404)
+    );
   }
-});
+};
 
 ///////////////////////////////////////////////////////
 // @desc      Get single review
@@ -37,7 +49,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
 exports.getReview = async (req, res, next) => {
   try {
     const review = await Review.findById(req.params.id).populate({
-      path: 'bootcamp',
+      path: 'bootcamp user',
       select: 'name description',
     });
 
@@ -69,13 +81,11 @@ exports.getReview = async (req, res, next) => {
 // @access    Private
 exports.addReview = async (req, res, next) => {
   try {
-
-console.log('********addReview  **************');
+    console.log('********addReview  **************');
 
     req.body.bootcamp = req.params.bootcampId;
     req.body.user = req.user.id;
-    console.log(req.body.bootcamp );
-    
+    console.log(req.body.bootcamp);
 
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 

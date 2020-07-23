@@ -63,21 +63,21 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
 
 /////////////////////////////////////////////////////////////////
 // Generate and hash password token
-UserSchema.methods.getResetPasswordToken = function() {
-  // Generate token
-  const resetToken = crypto.randomBytes(20).toString('hex');
+// UserSchema.methods.getResetPasswordToken = function() {
+//   // Generira slučani token
+//   const resetToken = crypto.randomBytes(20).toString('hex');
 
-  // Hash token and set to resetPasswordToken field
-  this.resetPasswordToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
+//   // Hash token and set to resetPasswordToken field
+//   this.resetPasswordToken = crypto
+//     .createHash('sha256')
+//     .update(resetToken)
+//     .digest('hex');
 
-  // Set expire za 4sata minuta
-  this.resetPasswordExpire = Date.now() + 240 * 60 * 1000;
+//   // Set expire za 4sata minuta
+//   this.resetPasswordExpire = Date.now() + 240 * 60 * 1000;
 
-  return resetToken;
-};
+//   return resetToken;
+// };
 
 ////////////////////////////////////////////////////////////////
 module.exports = mongoose.model('User', UserSchema);

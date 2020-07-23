@@ -67,7 +67,9 @@ exports.login = async (req, res, next) => {
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
     console.log('-----------------------', req.body);
     user.postmanLogin = req.body.postmanLogin;
-    console.log('mmmm', user);
+
+    req.pokus1 = 'req.pokus1 xxxxxx'
+    res.pokus1 = 'res.pokus1 xxxxxxxxx'
 
     sendTokenResponse(user, 200, res);
   } catch (error) {
@@ -190,18 +192,29 @@ exports.forgotpassword = async (req, res, next) => {
         )
       );
     }
-    console.log('1111111');
 
     // Resetiraj TOKEN za ovog korisnika
-    const resetToken = user.getResetPasswordToken();
+    // const resetToken = user.getResetPasswordToken();
 
+    // Generira slučajni token koji cemo kriptirati
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    // Hash token and set to resetPasswordToken field
+    user.resetPasswordToken = crypto
+      .createHash('sha256')
+      .update(resetToken)
+      .digest('hex');
+
+    // Set expire za 4 sata
+    user.resetPasswordExpire = Date.now() + 240 * 60 * 1000;
+
+    console.log(user);
+    
     // snimi privremeno resetPasswordToken i resetPasswordExpire u bazu
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -272,7 +285,7 @@ exports.resetPassword = async (req, res, next) => {
   }
 };
 
-// @desc      Reset password
+// @desc      Dobivamo LINK od usera za Reset password
 // @route     GET /api/v1/auth/resetpassword/:resettoken
 // @access    Public
 exports.getResetPassword = async (req, res, next) => {
@@ -351,13 +364,14 @@ const sendTokenResponse = (user, statusCode, res) => {
       success: true,
       token: token,
       user: user,
+      postmanLogin: user.postmanLogin
     });
-
   } else {
-    res.status(statusCode).cookie('token', token, options).render('index', {
+    res.status(statusCode).cookie('tokenHTML', token, options).render('index', {
       success: true,
       token: token,
       user: user,
+      postmanLogin: user.postmanLogin
     });
   }
 };
