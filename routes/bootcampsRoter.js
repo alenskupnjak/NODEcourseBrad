@@ -29,6 +29,7 @@ router.use('/:bootcampId/reviews', reviewRouter );
 
 // dohvati Geocode u sfernim koordinatama
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
+router.route('/radius').post(getBootcampsInRadius);
 
 router
   .route('/:id/photo')
