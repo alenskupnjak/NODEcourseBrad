@@ -1,27 +1,22 @@
-const loginForm = document.querySelector('.form');
-const daj = document.getElementById('ajmoo');
+
+import axios from 'axios';
 
 
 
-console.log(loginForm, daj);
 
-alert('tu sam')
-console.log('**********************************');
-
-
-daj.addEventListener('click',(e)=>{
-    console.log('++++++++++++++++++++++++++++++++');
+const deleteData = async (id) => {
+  try {
+    const res = await axios({
+      method: 'DELETE',
+      url: `<%= port %>/api/v1/reviews/${id}`,
+    });
     
-})
+      showAlert('success', 'Delete JE uspio');
+  
+  } catch (error) {
+    showAlert('error', 'Update nije uspio');
+    console.log(error);
+  }
+};
 
-if (loginForm) {
-  document.querySelector('.form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    // VALUES
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    console.log(email, password );
-    
-    // login(email, password);
-  });
-}
+module.exports = deleteData

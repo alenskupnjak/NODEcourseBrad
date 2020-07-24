@@ -1,12 +1,9 @@
 const colors = require('colors');
-const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const bodyParser = require('body-parser');
-const errorHandlerSvi = require('./middleware/error');
 const express = require('express');
 const dotenv = require('dotenv'); // Load config file
-const logger = require('./middleware/logger');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -16,6 +13,9 @@ const cors = require('cors');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
+
+const logger = require('./middleware/logger');
+const errorHandlerSvi = require('./middleware/error');
 
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
@@ -52,7 +52,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE, pokusni
-// app.use(logger);
+app.use(logger);
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -78,7 +78,7 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-// app.use(limiter);
+app.use(limiter);
 
 // Prevent http param pollution
 app.use(hpp());
@@ -106,7 +106,7 @@ const PORT = process.env.PORT || 5500;
 // prati zahtijeve koji stizu
 const server = app.listen(PORT, () => {
   console.log(`App listening on port ${process.env.PORT}`.blue);
-  console.log(process.env.NODE_ENV.yellow);
+  console.log(colors.blue(process.env.NODE_ENV));
 });
 
 // zatvar program

@@ -22,6 +22,7 @@ exports.getReviews = async (req, res, next) => {
 
       res.status(200).render('reviews', {
         success: true,
+        user: 'ne',
         count: reviews.length,
         reviews: reviews,
       });
@@ -30,7 +31,9 @@ exports.getReviews = async (req, res, next) => {
       // res.status(200).json(res.advancedResults);
       res.status(200).render('manage-reviews', {
         success: true,
+        user: 'ne',
         reviews: res.advancedResults.data,
+        port: `${req.protocol}://${req.get('host')}`
       });
     }
   } catch (error) {
