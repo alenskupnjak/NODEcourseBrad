@@ -8,7 +8,7 @@ const {
   deleteBootcamp,
   getBootcampsInRadius,
   bootcampPhotoUpload,
-  getBootcampsData
+  getBootcampsData,
 } = require('../controllers/bootcampCtrl');
 
 // štiti rute od neulogiranih usera
@@ -24,8 +24,7 @@ const reviewRouter = require('./reviewsRouter');
 
 // Re-route into other resource routers
 router.use('/:bootcampId/courses', courseRouter);
-router.use('/:bootcampId/reviews', reviewRouter );
-
+router.use('/:bootcampId/reviews', reviewRouter);
 
 // dohvati Geocode u sfernim koordinatama
 router.route('/radius/:zipcode/:distance').get(getBootcampsInRadius);
@@ -41,16 +40,15 @@ router
   .get(advancedResults(Bootcamp, 'courses'), getBootcamps)
   .post(protect, authorizeKorisnik('publisher', 'admin'), createBootcamp);
 
-
 // dohvati sve podatke
 router
   .route('/data')
-  .get(advancedResults(Bootcamp, 'courses'), getBootcampsData)
+  .get(advancedResults(Bootcamp, 'courses'), getBootcampsData);
 
 // dohvati jednog
 router
   .route('/:id')
-  .get(protect,getBootcamp)
+  .get(protect, getBootcamp)
   .put(protect, authorizeKorisnik('publisher', 'admin'), updateBootcamp)
   .delete(protect, authorizeKorisnik('publisher', 'admin'), deleteBootcamp);
 

@@ -27,7 +27,7 @@ exports.getOneUser = async (req, res, next) => {
 
     res.status(200).json({
       sucess: true,
-      data:user
+      data: user,
     });
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -44,7 +44,7 @@ exports.createUser = async (req, res, next) => {
 
     res.status(201).json({
       sucess: true,
-      data:user
+      data: user,
     });
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -57,14 +57,14 @@ exports.createUser = async (req, res, next) => {
 // @access    Private/admin
 exports.updateUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body,{
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     res.status(200).json({
       sucess: true,
-      data:user
+      data: user,
     });
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -80,9 +80,14 @@ exports.deleteUser = async (req, res, next) => {
     const user = await User.findByIdAndDelete(req.params.id);
     res.status(200).json({
       sucess: true,
-      poruka: 'Korisnik obrisan'
+      poruka: 'Korisnik obrisan',
     });
   } catch (error) {
-    return next(new ErrorResponse('User role user is not authorized to access this route!!', 400));
+    return next(
+      new ErrorResponse(
+        'User role user is not authorized to access this route!!',
+        400
+      )
+    );
   }
 };

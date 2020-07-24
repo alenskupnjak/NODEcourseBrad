@@ -68,8 +68,8 @@ exports.login = async (req, res, next) => {
     console.log('-----------------------', req.body);
     user.postmanLogin = req.body.postmanLogin;
 
-    req.pokus1 = 'req.pokus1 xxxxxx'
-    res.pokus1 = 'res.pokus1 xxxxxxxxx'
+    req.pokus1 = 'req.pokus1 xxxxxx';
+    res.pokus1 = 'res.pokus1 xxxxxxxxx';
 
     sendTokenResponse(user, 200, res);
   } catch (error) {
@@ -128,21 +128,21 @@ exports.updateUserDetails = async (req, res, next) => {
       email: req.body.email,
     };
 
-    const user = await User.findByIdAndUpdate(req.user.id, poljaToUpdate, {
+    // pronalazimo korisnika i radimo update podataka
+    await User.findByIdAndUpdate(req.user.id, poljaToUpdate, {
       new: true,
       runValidators: true,
     });
 
-    res.status(200).render('index', {
-      success: true,
-      data: user,
+    res.status(200).render('manage-account', {
+      pageTitle: 'Manage-account',
+      data: res.advancedResults,
+      user: req.user,
     });
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
 };
-
-
 
 /////////////////////////////////////////////////////////
 // @desc      UPDATE password
@@ -175,8 +175,6 @@ exports.updatePassword = async (req, res, next) => {
     return next(new ErrorResponse(error, 400));
   }
 };
-
-
 
 ////////////////////////////////////////////////////////////
 // @desc      Zaboravio sam password
@@ -213,12 +211,14 @@ exports.forgotpassword = async (req, res, next) => {
     user.resetPasswordExpire = Date.now() + 240 * 60 * 1000;
 
     console.log(user);
-    
+
     // snimi privremeno resetPasswordToken i resetPasswordExpire u bazu
     await user.save({ validateBeforeSave: false });
 
     // Create reset URL
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/resetpassword/${resetToken}`;
+    const resetUrl = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
@@ -249,7 +249,6 @@ exports.forgotpassword = async (req, res, next) => {
     return next(new ErrorResponse('Email could not be sent', 500));
   }
 };
-
 
 // @desc      Reset password
 // @route     PUT /api/v1/auth/resetpassword/:resettoken
@@ -289,8 +288,6 @@ exports.resetPassword = async (req, res, next) => {
     next(new ErrorResponse(error, 400));
   }
 };
-
-
 
 // @desc      Dobivamo LINK od usera za Reset password
 // @route     GET /api/v1/auth/resetpassword/:resettoken
@@ -342,8 +339,6 @@ exports.getResetPassword = async (req, res, next) => {
   }
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 //TOKEN
 // Get token from model, create cookie and send response
@@ -373,14 +368,14 @@ const sendTokenResponse = (user, statusCode, res) => {
       success: true,
       token: token,
       user: user,
-      postmanLogin: user.postmanLogin
+      postmanLogin: user.postmanLogin,
     });
   } else {
     res.status(statusCode).cookie('tokenHTML', token, options).render('index', {
       success: true,
       token: token,
       user: user,
-      postmanLogin: user.postmanLogin
+      postmanLogin: user.postmanLogin,
     });
   }
 };

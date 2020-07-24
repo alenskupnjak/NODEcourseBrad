@@ -1,6 +1,6 @@
 const colors = require('colors');
 const bcrypt = require('bcryptjs');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const bodyParser = require('body-parser');
 const errorHandlerSvi = require('./middleware/error');
@@ -10,13 +10,12 @@ const logger = require('./middleware/logger');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xss = require('xss-clean');
-const rateLimit = require("express-rate-limit");
-var hpp = require('hpp');
+const rateLimit = require('express-rate-limit');
+let hpp = require('hpp');
 const cors = require('cors');
 const morgan = require('morgan');
 const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
-
 
 // definiramo path za file u koji spremamo potrebne varijable
 dotenv.config({ path: './config/config.env' });
@@ -47,15 +46,13 @@ app.use(express.json());
 // body -parser, bez ovoga ne salje podatke automatski kroz req.body (npm i body-parser)
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
-
 app.use(express.json());
 
 // Cookie parser, za slanje TOKENA
 app.use(cookieParser());
 
 // MIDDLEWARE, pokusni
-app.use(logger);
+// app.use(logger);
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -74,11 +71,10 @@ app.use(helmet());
 // Prevent XSS attacks
 app.use(xss());
 
-
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 10 * 60 * 1000, // 10 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
 });
 
 //  apply to all requests
@@ -90,7 +86,6 @@ app.use(hpp());
 // Enable CORS
 app.use(cors());
 
-
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -100,7 +95,7 @@ app.use('/api/v1/bootcamps', bootcampRouter);
 app.use('/api/v1/courses', coursesRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use('/api/v1/reviews', reviewsRouter );
+app.use('/api/v1/reviews', reviewsRouter);
 
 // MIDDLEWARE za greske
 app.use(errorHandlerSvi);

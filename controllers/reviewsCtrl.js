@@ -1,3 +1,4 @@
+const colors = require('colors');
 const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const Review = require('../models/ReviewMod');
@@ -17,23 +18,20 @@ exports.getReviews = async (req, res, next) => {
         select: 'name description email',
       });
 
-
       console.log(req.pokus1, res.postmanLogin, req.postmanLogin, req.hello);
 
-      res.status(200).render('reviews',{
+      res.status(200).render('reviews', {
         success: true,
         count: reviews.length,
         reviews: reviews,
       });
-      console.log(reviews);
-
-      // return res.status(200).json({
-      //   success: true,
-      //   count: reviews.length,
-      //   reviews: reviews,
-      // });
     } else {
-      res.status(200).json(res.advancedResults);
+      console.log(colors.green(res.advancedResults));
+      // res.status(200).json(res.advancedResults);
+      res.status(200).render('manage-reviews', {
+        success: true,
+        reviews: res.advancedResults.data,
+      });
     }
   } catch (error) {
     next(
@@ -164,7 +162,6 @@ exports.deleteReview = async (req, res, next) => {
       poruka: 'Review obrisan!',
     });
   } catch (error) {
-    console.log(review);
     next(new ErrorResponse(error, 404));
   }
 };
