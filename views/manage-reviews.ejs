@@ -44,7 +44,7 @@
 							<tbody>
 								<% for (let data of reviews) {%>
 								<tr id="<%= data._id %>">
-									<td><%= data.title%> <%= data._id %></td>
+									<td><%= data.title%></td>
 									<td><%= data.rating%></td>
 									<td>
 										<a href="add-review.html" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i></a>
@@ -88,8 +88,9 @@
 
 			deleteData(id)
 			refreshPage()
-
-			location.assign('/api/v1/reviews')
+			// location.refreshPage()
+			// window.location.reload(true)
+			// location.assign('/api/v1/reviews')
 		})
 
 
@@ -110,6 +111,7 @@
 					method: 'GET',
 				});
 				console.log('REFRESG JE uspio');
+				window.location.reload(true)
 			} catch (error) {
 				console.log(error);
 			}
