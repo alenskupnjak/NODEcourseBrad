@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+	<script src="https://kit.fontawesome.com/3da1a747b2.js"></script>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+	<script src="https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css" rel="stylesheet" />
+	<title>Ad rewiew</title>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<%- include('./insertview/navigation.ejs')%>
+
+	<!-- {
+		_id: 5d7a514b5d2c12c7449be026,
+		title: 'Great bootcamp slon',
+		text: 'Neki text it amet, co',
+		rating: 10,
+		bootcamp: {
+			_id: 5d725a1b7b292f5f8ceff788,
+			name: 'Devcentral Bootcamp',
+			description: 'Is coding your passion? Codemasters will give you the skills and the tools to become the best developer possible. We specialize in front end and full stack web development',
+			id: '5d725a1b7b292f5f8ceff788'
+		},
+		user: null,
+		createdAt: 2020-07-09T16:08:51.832Z,
+		__v: 0
+	} -->
+
+
+	<section class="container mt-5">
+		<div class="row">
+			<div class="col-md-8 m-auto">
+				<div class="card bg-white py-2 px-4">
+					<div class="card-body">
+						<a href="/api/v1/bootcamps/<%= review.bootcamp._id%>" class="btn btn-link text-secondary my-3"><i class="fas fa-chevron-left"></i>
+							Bootcamp Info</a>
+						<h1 class="mb-2"><%= review.title%></h1>
+						<h3 class="text-primary mb-4">Write a Review</h3>
+						<p>
+							You must have attended and graduated this bootcamp to review
+						</p>
+						<form action="reviews.html">
+							<div class="form-group">
+								<label for="rating">Rating: <span class="text-primary"><%= review.rating%></span></label>
+								<input type="range" class="custom-range" min="1" max="10" step="1" value="<%= review.rating%>" id="rating" />
+							</div>
+							<div class="form-group">
+								<input type="text" name="title" class="form-control" placeholder="Review title" />
+							</div>
+							<div class="form-group">
+								<textarea name="review" rows="10" class="form-control" placeholder="Your review"><%= review.text%></textarea>
+							</div>
+							<div class="form-group">
+								<input type="submit" value="Submit Review" class="btn btn-dark btn-block" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

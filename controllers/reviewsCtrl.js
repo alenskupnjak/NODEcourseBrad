@@ -10,6 +10,10 @@ const Bootcamp = require('../models/BootcampsMod');
 // @access    Public
 exports.getReviews = async (req, res, next) => {
   try {
+    // console.log('----',user.postmanLogin);
+    // console.log('----', req, res);
+    console.log('++++++', req.postmanLogin, res.postmanLogin,  req.postman);
+    console.log('----++++++hhhhhhhhhhh---------------------------------------', req.body, req.user);
     if (req.params.bootcampId) {
       const reviews = await Review.find({
         bootcamp: req.params.bootcampId,
@@ -18,7 +22,13 @@ exports.getReviews = async (req, res, next) => {
         select: 'name description email',
       });
 
-      console.log(req.pokus1, res.postmanLogin, req.postmanLogin, req.hello);
+
+          // res.status(200).json({
+          //   success: true,
+          //   user: 'ne',
+          //   count: reviews.length,
+          //   reviews: reviews,
+          // });
 
       res.status(200).render('reviews', {
         success: true,
@@ -26,9 +36,11 @@ exports.getReviews = async (req, res, next) => {
         count: reviews.length,
         reviews: reviews,
       });
+
     } else {
-      console.log(colors.green(res.advancedResults));
-      // res.status(200).json(res.advancedResults);
+      // console.log(colors.green(res.advancedResults));
+      // res.status(200).json(res.advancedResults.data);
+
       res.status(200).render('manage-reviews', {
         success: true,
         user: 'ne',
@@ -63,10 +75,11 @@ exports.getReview = async (req, res, next) => {
         )
       );
     }
-
-    res.status(201).json({
+    console.log(review);
+    
+    res.status(201).render('add-review',{
       success: true,
-      data: review,
+      review: review,
     });
   } catch (error) {
     console.log('review= '.red, error);

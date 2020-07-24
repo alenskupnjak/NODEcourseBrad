@@ -43,14 +43,13 @@
 
 							<tbody>
 								<% for (let data of reviews) {%>
-								<tr id="<%= data._id %>">
+								<tr>
 									<td><%= data.title%></td>
 									<td><%= data.rating%></td>
 									<td>
-										<a href="add-review.html" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i></a>
+										<a href="" class="btn btn-secondary edit" id="<%= data._id %>"><i class="fas fa-pencil-alt"></i></a>
 
-										<a href="/api/v1/reviews/<%= data._id %>" class="btn btn-danger" class="brisi"
-											id="<%= data._id %>"><i class="fas fa-times"></i></a>
+										<a href="" class="btn btn-danger brisi" id="<%= data._id %>"><i class="fas fa-times"></i></a>
 
 										<!-- <button class="btn btn-danger">
 											<i class="fas fa-times"></i><a href="add-review.html"></a>
@@ -69,28 +68,33 @@
 
 	<script>
 
-
 		document.getElementById('tabela').addEventListener('click', e => {
 			e.preventDefault()
-			console.log(e);
 			const zapis = e.path.map(data => {
 				return data
 			})
 
+			console.log(zapis);
 
 			let id;
-			zapis.find(data => {
-				if (data.tagName === 'TR') {
-					console.log('xxx', data.getAttribute("id"));
-					id = data.getAttribute("id")
+			zapis.forEach((data, index) => {
+
+				if (index < zapis.length - 2) {
+					if (data.classList.contains('edit')) {
+						getOneReview(data.getAttribute("id"))
+						console.log('Edit', data.getAttribute("id"));
+						id = data.getAttribute("id")
+					}
+
+					if (data.classList.contains('brisi')) {
+						deleteData(data.getAttribute("id"))
+						id = data.getAttribute("id")
+						refreshPage()
+					}
+
 				}
 			})
 
-			deleteData(id)
-			refreshPage()
-			// location.refreshPage()
-			// window.location.reload(true)
-			// location.assign('/api/v1/reviews')
 		})
 
 
@@ -110,8 +114,20 @@
 				const res = await fetch(`<%= port %>/api/v1/reviews`, {
 					method: 'GET',
 				});
-				console.log('REFRESG JE uspio');
+				console.log('REFRES JE uspio');
 				window.location.reload(true)
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		const getOneReview = async (id) => {
+			try {
+				const res = await fetch(`<%= port %>/api/v1/reviews/${id}`, {
+					method: 'GET',
+				});
+				console.log('getOneReview  JE uspio');
+				location.assign(`/api/v1/reviews/${id}`)
 			} catch (error) {
 				console.log(error);
 			}

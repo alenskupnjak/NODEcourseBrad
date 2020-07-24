@@ -16,58 +16,7 @@
 <body>
 	<!-- Navbar -->
 	<%- include('./insertview/navigation.ejs')%>
-	<!-- <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-				<div class="container">
-					<a class="navbar-brand" href="index.html"
-						><i class="fas fa-laptop-code"></i> DevCamper</a
-					>
-					<button
-						class="navbar-toggler"
-						type="button"
-						data-toggle="collapse"
-						data-target="#navbarSupportedContent"
-					>
-						<span class="navbar-toggler-icon"></span>
-					</button>
-	
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item dropdown">
-								<a
-									class="nav-link dropdown-toggle"
-									href="#"
-									id="navbarDropdown"
-									role="button"
-									data-toggle="dropdown"
-								>
-									<i class="fas fa-user"></i> Account
-								</a>
-								<div class="dropdown-menu">
-									<a class="dropdown-item" href="manage-bootcamp.html"
-										>Manage Bootcamp</a
-									>
-									<a class="dropdown-item" href="manage-reviews.html"
-										>Manage Reviews</a
-									>
-									<a class="dropdown-item" href="manage-account.html"
-										>Manage Account</a
-									>
-									<div class="dropdown-divider"></div>
-									<a class="dropdown-item" href="login.html"
-										><i class="fas fa-sign-out-alt"></i> Logout</a
-									>
-								</div>
-							</li>
-							<li class="nav-item d-none d-sm-block">
-								<a class="nav-link" href="#">|</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="bootcamps.html">Browse Bootcamps</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</nav> -->
+
 
 	<section class="bootcamp mt-5">
 		<div class="container">
@@ -86,10 +35,10 @@
 					<div class="card mb-3">
 						<h5 class="card-header bg-primary text-white">Front End Web Development</h5>
 						<div class="card-body">
-							<h5 class="card-title"><%= data.weeks%></h5>
+							<h5 class="card-title"><%= data.weeks%> week</h5>
 							<p class="card-text"><%= data.description%></p>
 							<ul class="list-group mb-3">
-								<li class="list-group-item">Cost: $8,000 USD</li>
+								<li class="list-group-item"><%= data.averageCost%></li>
 								<li class="list-group-item">Skill Required: <%= data.minimumSkill%></li>
 								<li class="list-group-item">Scholarship Available: <i class="fas fa-check text-success"></i> </li>
 							</ul>
@@ -104,7 +53,7 @@
 					<!-- Image -->
 					<img src="/img/<%= bootCamp.photo%>" class="img-thumbnail" alt="">
 					<!-- Rating -->
-					<h1 class="text-center my-4"><span class="badge badge-secondary badge-success rounded-circle p-3">8.8</span>
+					<h1 class="text-center my-4"><span class="badge badge-secondary badge-success rounded-circle p-3"><%= bootCamp.averageRating%></span>
 						Rating</h1>
 					<!-- Buttons -->
 					<a href="/api/v1/bootcamps/<%= bootCamp.id%>/reviews" class="btn btn-dark btn-block my-3"><i class="fas fa-comments"></i> Read Reviews</a>

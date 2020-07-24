@@ -82,16 +82,17 @@ exports.createBootcamp = async (req, res, next) => {
         )
       );
     }
-
+    
     const bootcamp = await Bootcamp.create(req.body);
-
+    console.log(bootcamp);
+    
     res.status(201).json({
       sucess: true,
       msg: 'Kreiraj bootcamps',
       bootcamp: bootcamp
     });
   } catch (error) {
-    next(new ErrorResponse(`Problem sa kreiranjem bootcampa ${req.params.id}`, 404));
+    next(new ErrorResponse(`Problem sa kreiranjem bootcampa ${error}`, 404));
   }
 };
 
