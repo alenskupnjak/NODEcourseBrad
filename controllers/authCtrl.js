@@ -68,9 +68,6 @@ exports.login = async (req, res, next) => {
     console.log('-----------------------', req.body);
     user.postmanLogin = req.body.postmanLogin;
 
-    req.pokus1 = 'req.pokus1 xxxxxx';
-    res.pokus1 = 'res.pokus1 xxxxxxxxx';
-
     sendTokenResponse(user, 200, res);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -343,9 +340,7 @@ exports.getResetPassword = async (req, res, next) => {
 //TOKEN
 // Get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
-  // Create token
 
-  // const token = user.getSignedJwtToken();
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
@@ -361,9 +356,10 @@ const sendTokenResponse = (user, statusCode, res) => {
     console.log('production'.green);
     options.secure = true;
   }
-
+  
+  
   // ako upit dolazi iz postmana Postman dobiva svoj token, a HTML svoj token
-  if (user.postmanLogin) {
+  if (user.postmanLogin) {    
     res.status(statusCode).cookie('token', token, options).json({
       success: true,
       token: token,

@@ -3,6 +3,7 @@ const asyncHandler = require('../middleware/async');
 const path = require('path');
 const geocoder = require('../utils/geocoder');
 const ErrorResponse = require('../utils/errorResponse');
+const colors = require('colors');
 
 // @desc      Get all bootcamps
 // @route     GET /api/v1/bootcamps
@@ -24,7 +25,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Get all bootcamps
+// @desc      Get all  data bootcamps
 // @route     GET /api/v1/bootcamps/data
 // @access    Public
 exports.getBootcampsData = asyncHandler(async (req, res, next) => {
@@ -32,6 +33,7 @@ exports.getBootcampsData = asyncHandler(async (req, res, next) => {
   res.status(200).json(res.advancedResults);
 });
 
+//
 // @desc      Get single bootcamp
 // @route     GET /api/v1/bootcamps/:id
 // @access    Public
@@ -47,7 +49,10 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`Bootcamp not found id of ${req.params.id}`, 404)
     );
   }
-  console.log(bootCamp.courses);
+
+  var result = Object.keys(bootCamp).map((key) => [String(key), bootCamp[key]]);
+  console.log(colors.blue.inverse(result));
+
 
   // res.status(200).json({
   //   sucess: true,
@@ -58,6 +63,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
     sucess: true,
     msg: `Prikaži ${req.params.id}`,
     bootCamp: bootCamp,
+    boot: JSON.stringify(bootCamp),
   });
 });
 
@@ -82,14 +88,14 @@ exports.createBootcamp = async (req, res, next) => {
         )
       );
     }
-    
+
     const bootcamp = await Bootcamp.create(req.body);
     console.log(bootcamp);
-    
+
     res.status(201).json({
       sucess: true,
       msg: 'Kreiraj bootcamps',
-      bootcamp: bootcamp
+      bootcamp: bootcamp,
     });
   } catch (error) {
     next(new ErrorResponse(`Problem sa kreiranjem bootcampa ${error}`, 404));
@@ -106,9 +112,6 @@ exports.updateBootcamp = async (req, res, next) => {
 
     if (!bootCamps) {
       return new ErrorResponse('Nije naso zapis u bazi', 404);
-      // return res
-      //   .status(400)
-      //   .json({ sucess: false, poruka: 'Nije naso zapis!' });
     }
 
     // Provjeri da li je user bootcamp owner
@@ -135,11 +138,12 @@ exports.updateBootcamp = async (req, res, next) => {
       data: bootCamps,
     });
   } catch (error) {
-    next(error);
-    // res.status(400).json({
-    //   sucess: false,
-    //   poruka: error.message,
-    // });
+    next(
+      new ErrorResponse(
+        `Korisnik ${req.user.id} nije autoriziran za update ovog bootcama ${req.params.id}`,
+        401
+      )
+    );
   }
 };
 
@@ -196,17 +200,16 @@ exports.getBootcampsInRadius = async (req, res, next) => {
     console.log(req.params, req.body);
     console.log(req.params.zipcode, req.body.zipcode);
     if (req.params.zipcode) {
-       zipcode = req.params.zipcode;
-       miles  = req.params.miles;
+      zipcode = req.params.zipcode;
+      miles = req.params.miles;
     }
 
     if (req.body.zipcode) {
-      zipcode= req.body.zipcode;
+      zipcode = req.body.zipcode;
       miles = req.body.miles;
     }
     console.log('-------------------');
 
-    
     console.log(zipcode, miles);
 
     // za primjez
@@ -243,7 +246,7 @@ exports.getBootcampsInRadius = async (req, res, next) => {
       location: { $geoWithin: { $centerSphere: [[lngDoma, latDoma], radius] } },
     });
 
-    res.status(200).render('bootcamps',{
+    res.status(200).render('bootcamps', {
       success: true,
       count: bootcamps.length,
       doma: doma,

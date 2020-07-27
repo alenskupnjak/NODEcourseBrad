@@ -10,10 +10,6 @@ const Bootcamp = require('../models/BootcampsMod');
 // @access    Public
 exports.getReviews = async (req, res, next) => {
   try {
-    // console.log('----',user.postmanLogin);
-    // console.log('----', req, res);
-    console.log('++++++', req.postmanLogin, res.postmanLogin,  req.postman);
-    console.log('----++++++hhhhhhhhhhh---------------------------------------', req.body, req.user);
     if (req.params.bootcampId) {
       const reviews = await Review.find({
         bootcamp: req.params.bootcampId,
@@ -77,7 +73,7 @@ exports.getReview = async (req, res, next) => {
     }
     console.log(review);
     
-    res.status(201).render('add-review',{
+    res.status(201).render('review-edit',{
       success: true,
       review: review,
     });
@@ -95,12 +91,11 @@ exports.getReview = async (req, res, next) => {
 // @access    Private
 exports.addReview = async (req, res, next) => {
   try {
-    console.log('********addReview  **************');
-
     req.body.bootcamp = req.params.bootcampId;
     req.body.user = req.user.id;
     console.log(req.body.bootcamp);
-
+    console.log(res.advancedResults);
+    
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
     if (!bootcamp) {
@@ -114,9 +109,11 @@ exports.addReview = async (req, res, next) => {
 
     const review = await Review.create(req.body);
 
-    res.status(201).json({
+
+    
+    res.status(201).render('index',{
       success: true,
-      data: review,
+      bootcamps: res.advancedResults,
     });
   } catch (error) {
     console.log(error);

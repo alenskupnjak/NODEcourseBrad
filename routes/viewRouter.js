@@ -26,8 +26,14 @@ router
 router
   .route('/manage-account')
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.manageAccount);
+  
 router
   .route('/update-password')
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.updatePassword);
+
+router
+  .route('/add-reviews/:id')
+  .post(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview)
+  .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview);
 
 module.exports = router;

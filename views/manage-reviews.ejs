@@ -68,6 +68,7 @@
 
 	<script>
 
+
 		document.getElementById('tabela').addEventListener('click', e => {
 			e.preventDefault()
 			const zapis = e.path.map(data => {
@@ -79,16 +80,17 @@
 			let id;
 			zapis.forEach((data, index) => {
 
-				if (index < zapis.length - 2) {
+				if (index < zapis.length - 2) {					
 					if (data.classList.contains('edit')) {
+						id = data.getAttribute("id")
 						getOneReview(data.getAttribute("id"))
 						console.log('Edit', data.getAttribute("id"));
-						id = data.getAttribute("id")
 					}
 
+					// ako zelim obrisati
 					if (data.classList.contains('brisi')) {
+						console.log('tutut', data.getAttribute("id"));
 						deleteData(data.getAttribute("id"))
-						id = data.getAttribute("id")
 						refreshPage()
 					}
 
@@ -100,12 +102,15 @@
 
 		const deleteData = async (id) => {
 			try {
-				const res = await fetch(`<%= port %>/api/v1/reviews/${id}`, {
+				console.log('link=', `<%= port %>/api/v1/reviews/${id}`);
+				
+				await fetch(`<%= port %>/api/v1/reviews/${id}`, {
 					method: 'DELETE',
 				});
 				console.log('Delete JE uspio');
 			} catch (error) {
 				console.log(error);
+				
 			}
 		};
 

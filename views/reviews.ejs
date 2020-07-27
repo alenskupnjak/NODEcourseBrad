@@ -28,16 +28,15 @@
 					<h1 class="mb-4">DevWorks Bootcamp Reviews</h1>
 					<!-- Reviews -->
 					<% for (let data of reviews) {%>
-						<div class="card mb-3">
-							<h5 class="card-header bg-dark text-white"><%= data.title %></h5>
-							<div class="card-body">
-								<h5 class="card-title">
-									Rating: <span class="text-success"><%= data.rating %></span>
-								</h5>
-								<p class="card-text"> <%= data.text %></p>
-								<!-- <p class="text-muted">Writtern By <%= data.user.name %></p> -->
-							</div>
+					<div class="card mb-3">
+						<h5 class="card-header bg-dark text-white"><%= data.title %></h5>
+						<div class="card-body">
+							<h5 class="card-title">
+								Rating: <span class="text-success"><%= data.rating %></span>
+							</h5>
+							<p class="card-text"> <%= data.text %></p>
 						</div>
+					</div>
 					<% } %>
 
 				</div>
@@ -49,12 +48,43 @@
 						Rating
 					</h1>
 					<!-- Buttons -->
-					<a href="add-review.html" class="btn btn-primary btn-block my-3"><i class="fas fa-pencil-alt"></i> Review This
-						Bootcamp</a>
+					<form action="/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>" method="POST">
+						<a href="/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>" class="btn btn-primary btn-block my-3"
+							id="updateReview"><i class="fas fa-pencil-alt"></i> Review This
+							Bootcamp</a>
+					</form>
+
 				</div>
 			</div>
 		</div>
 	</section>
+
+	<script>
+		// document.getElementById('updateReview').addEventListener('click', e => {
+		// 	try {
+		// 		console.log('link=', `/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`);
+
+		// 		// posaljiPodatak();
+		// 		console.log('POST JE uspio');
+		// 		// location.assign(`/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`)
+		// 	} catch (error) {
+		// 		console.log(error);
+		// 	}
+
+
+
+			
+		// })
+		
+		
+		// const posaljiPodatak = async () => {
+		// 	await fetch(`/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`, {
+		// 			method: 'POST',
+		// 		});
+		// };
+
+
+	</script>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

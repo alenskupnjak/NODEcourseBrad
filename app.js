@@ -52,7 +52,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE, pokusni
-app.use(logger);
+// app.use(logger);
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {
@@ -78,7 +78,7 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-app.use(limiter);
+// app.use(limiter);
 
 // Prevent http param pollution
 app.use(hpp());

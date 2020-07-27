@@ -117,3 +117,22 @@ exports.updatePassword = (req, res, next) => {
     return next(new ErrorResponse(`Greška kod updatePassword`, 401));
   }
 };
+
+
+// @desc      Upravljanje
+// @route     POST /api/v1/view/add-reviews/:id
+// @access    Public
+exports.addReview = (req, res, next) => {
+  try {
+    console.log(req.params.id);
+    console.log(req.user);
+    res.status(200).render('review-add', {
+      pageTitle: 'Add reviews',
+      review: res.advancedResults,
+      user:req.user,
+      id :req.params.id
+    });
+  } catch (error) {
+    return next(new ErrorResponse(`Greška kod addReview`+error, 401));
+  }
+};

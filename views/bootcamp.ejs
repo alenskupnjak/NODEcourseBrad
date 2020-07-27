@@ -53,10 +53,12 @@
 					<!-- Image -->
 					<img src="/img/<%= bootCamp.photo%>" class="img-thumbnail" alt="">
 					<!-- Rating -->
-					<h1 class="text-center my-4"><span class="badge badge-secondary badge-success rounded-circle p-3"><%= bootCamp.averageRating%></span>
+					<h1 class="text-center my-4"><span
+							class="badge badge-secondary badge-success rounded-circle p-3"><%= bootCamp.averageRating%></span>
 						Rating</h1>
 					<!-- Buttons -->
-					<a href="/api/v1/bootcamps/<%= bootCamp.id%>/reviews" class="btn btn-dark btn-block my-3"><i class="fas fa-comments"></i> Read Reviews</a>
+					<a href="/api/v1/bootcamps/<%= bootCamp.id%>/reviews" class="btn btn-dark btn-block my-3"><i
+							class="fas fa-comments"></i> Read Reviews</a>
 					<a href="add-review.html" class="btn btn-light btn-block my-3"><i class="fas fa-pencil-alt"></i> Write a
 						Review</a>
 					<a href="#" target="_blank" class="btn btn-secondary btn-block my-3"><i class="fas fa-globe"></i> Visit
@@ -65,12 +67,33 @@
 					<div id='map' style='width: 100%; height: 300px;'></div>
 					<!-- Perks -->
 					<ul class="list-group list-group-flush class=" mt-4">
+
+						<% if( bootCamp.housing === false) { %>
+						<li class="list-group-item"><i class="fas fa-times text-danger"></i> Housing</li>
+						<% } else{ %>
 						<li class="list-group-item"><i class="fas fa-check text-success"></i> Housing</li>
-						<li class="list-group-item"><i class="fas fa-check text-danger"></i> Job Assistance</li>
-						<li class="list-group-item"><i class="fas fa-times text-success"></i> Job Guarantee</li>
-						<li class="list-group-item"><i class="fas fa-check text-success"></i> Accepts GI Bill</li>
+						<% } %>
+
+						<% if( bootCamp.jobAssistance === false) { %>
+							<li class="list-group-item"><i class="fas fa-times text-danger"></i> Job Assistance</li>
+						<% } else{ %>
+							<li class="list-group-item"><i class="fas fa-check text-success"></i> Job Assistance</li>
+						<% } %>
+
+						<% if( bootCamp.jobGuarantee === false) { %>
+							<li class="list-group-item"><i class="fas fa-times text-danger"></i> Job Guarantee</li>
+						<% } else{ %>
+							<li class="list-group-item"><i class="fas fa-check text-success"></i> Job Guarantee</li>
+						<% } %>
+
+						<% if( bootCamp.acceptGi === false) { %>
+							<li class="list-group-item"><i class="fas fa-times text-danger"></i> Accepts GI Bill</li>
+						<% } else{ %>
+							<li class="list-group-item"><i class="fas fa-check text-success"></i> Accepts GI Bill</li>
+						<% } %>
 					</ul>
 				</div>
+				<%= boot%>
 			</div>
 		</div>
 	</section>
