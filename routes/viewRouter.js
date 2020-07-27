@@ -36,4 +36,8 @@ router
   .post(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview)
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview);
 
+  router
+  .route('/error')
+  .post(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.postError)
+
 module.exports = router;

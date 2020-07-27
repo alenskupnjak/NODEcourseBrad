@@ -136,3 +136,22 @@ exports.addReview = (req, res, next) => {
     return next(new ErrorResponse(`Greška kod addReview`+error, 401));
   }
 };
+
+
+// @desc      Prikazivanje grešaka
+// @route     POST /api/v1/view/error
+// @access    Public
+exports.postError = (req, res, next) => {
+  try {
+    console.log('tutututut');
+    console.log(req.user);
+    res.status(200).render('error', {
+      pageTitle: 'Add reviews',
+      review: res.advancedResults,
+      user:req.user,
+      id :req.params.id
+    });
+  } catch (error) {
+    return next(new ErrorResponse(`Greška kod addReview`+error, 401));
+  }
+};

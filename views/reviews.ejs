@@ -17,6 +17,27 @@
 	<!-- Navbar -->
 	<%- include('./insertview/navigation.ejs')%>
 
+	<% if(reviews.length === 0){ %>
+		<section class="bootcamp mt-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8">
+
+						<h1 class="mb-4">DevWorks Bootcamp Reviews</h1>
+						<div class="card mb-3">
+							<h5 class="card-header bg-dark text-white"></h5>
+							<div class="card-body">
+								<p class="card-text"> Nema nijednog komentara!</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+	<% } else{ %>  
+
 	<section class="bootcamp mt-5">
 		<div class="container">
 			<div class="row">
@@ -58,33 +79,8 @@
 			</div>
 		</div>
 	</section>
+	<% } %>
 
-	<script>
-		// document.getElementById('updateReview').addEventListener('click', e => {
-		// 	try {
-		// 		console.log('link=', `/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`);
-
-		// 		// posaljiPodatak();
-		// 		console.log('POST JE uspio');
-		// 		// location.assign(`/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`)
-		// 	} catch (error) {
-		// 		console.log(error);
-		// 	}
-
-
-
-			
-		// })
-		
-		
-		// const posaljiPodatak = async () => {
-		// 	await fetch(`/api/v1/view/add-reviews/<%= reviews[0].bootcamp._id %>`, {
-		// 			method: 'POST',
-		// 		});
-		// };
-
-
-	</script>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

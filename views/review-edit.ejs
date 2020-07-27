@@ -34,7 +34,7 @@
 
 						<form action="">
 							<div class="form-group">
-								<label for="rating" id="labelRating" >Rating: <span class="text-primary"
+								<label for="rating" id="labelRating">Rating: <span class="text-primary"
 										id="spanValue"><%= review.rating%></span></label>
 								<input type="range" class="custom-range" min="1" max="10" step="1" id="rating" name="rating"
 									value="<%= review.rating%>" />
@@ -64,8 +64,8 @@
 		const rating = document.getElementById('rating')
 		const spanValue = document.getElementById('spanValue')
 
-		rating.addEventListener('change', e=>{
-				spanValue.textContent = e.target.value
+		rating.addEventListener('change', e => {
+			spanValue.textContent = e.target.value
 		})
 
 		document.getElementById("noveVrijednosti").addEventListener('click', e => {
@@ -87,14 +87,6 @@
 
 
 		const posaljiPodatak = async (update) => {
-			const data = {
-				userId: 11,
-				id: 2,
-				title: 'coding task',
-				completed: false
-			}
-
-			console.log(`/api/v1/reviews/<%= review._id %>`);
 
 			await fetch(`/api/v1/reviews/<%= review._id %>`, {
 				method: 'PUT',
