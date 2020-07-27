@@ -13,8 +13,17 @@ const colors = require('colors');
 // @access    Public
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, password2, role } = req.body;
 
+    if (password !== password2) {
+      return next(new ErrorResponse('Upisani passwordi se ne podudaraju.', 400));
+    }
+    
+    const userProvjera = await User.findOne({email: email})
+    
+    if (userProvjera !== null) {
+      return next(new ErrorResponse('Takav korisnik već postoji', 400));
+    }
     //Create user
     const user = await User.create({
       name,
@@ -22,7 +31,7 @@ exports.register = async (req, res, next) => {
       password,
       role,
     });
-
+      
     //šaljemo token
     sendTokenResponse(user, 200, res);
   } catch (error) {
@@ -46,7 +55,7 @@ exports.login = async (req, res, next) => {
 
     // Check for user
     const user = await User.findOne({ email: email }).select('+password');
-    console.log(user);
+
 
     // ako nema usera u bazi javlja grešku
     if (!user) {
