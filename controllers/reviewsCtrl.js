@@ -127,6 +127,11 @@ exports.addReview = async (req, res, next) => {
 exports.updateReview = asyncHandler(async (req, res, next) => {
   let review = await Review.findById(req.params.id);
 
+  console.log(colors.red.inverse('-------------ajmooooo  vvv-------------'));
+  console.log(req.body);
+
+  
+
   if (!review) {
     return next(
       new ErrorResponse(`No review with the id of ${req.params.id}`, 404)

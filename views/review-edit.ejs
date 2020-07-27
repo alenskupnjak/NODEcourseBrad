@@ -10,28 +10,12 @@
 	<link rel="stylesheet" href="/css/style.css" />
 	<script src="https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js"></script>
 	<link href="https://api.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css" rel="stylesheet" />
-	<title>Edit rewiew</title>
+	<title>Edit review</title>
 </head>
 
 <body>
 	<!-- Navbar -->
 	<%- include('./insertview/navigation.ejs')%>
-
-	<!-- {
-		_id: 5d7a514b5d2c12c7449be026,
-		title: 'Great bootcamp slon',
-		text: 'Neki text it amet, co',
-		rating: 10,
-		bootcamp: {
-			_id: 5d725a1b7b292f5f8ceff788,
-			name: 'Devcentral Bootcamp',
-			description: 'Is coding your passion? Codemasters will give you the skills and the tools to become the best developer possible. We specialize in front end and full stack web development',
-			id: '5d725a1b7b292f5f8ceff788'
-		},
-		user: null,
-		createdAt: 2020-07-09T16:08:51.832Z,
-		__v: 0
-	} -->
 
 
 	<section class="container mt-5">
@@ -39,26 +23,32 @@
 			<div class="col-md-8 m-auto">
 				<div class="card bg-white py-2 px-4">
 					<div class="card-body">
-						<a href="/api/v1/bootcamps/<%= review.bootcamp._id%>" class="btn btn-link text-secondary my-3"><i class="fas fa-chevron-left"></i>
+						<a href="/api/v1/bootcamps/<%= review.bootcamp._id%>" class="btn btn-link text-secondary my-3"><i
+								class="fas fa-chevron-left"></i>
 							Bootcamp Info</a>
 						<h1 class="mb-2"><%= review.title%></h1>
 						<h3 class="text-primary mb-4">Write a Review</h3>
 						<p>
 							You must have attended and graduated this bootcamp to review
 						</p>
-						<form action="reviews.html">
+
+						<form action="">
 							<div class="form-group">
-								<label for="rating">Rating: <span class="text-primary"><%= review.rating%></span></label>
-								<input type="range" class="custom-range" min="1" max="10" step="1" value="<%= review.rating%>" id="rating" />
+								<label for="rating" id="labelRating" >Rating: <span class="text-primary"
+										id="spanValue"><%= review.rating%></span></label>
+								<input type="range" class="custom-range" min="1" max="10" step="1" id="rating" name="rating"
+									value="<%= review.rating%>" />
 							</div>
 							<div class="form-group">
-								<input type="text" name="title" class="form-control" placeholder="Review title" />
+								<input type="text" name="title" id="title" class="form-control" placeholder="Review title"
+									value="<%= review.title%>" />
 							</div>
 							<div class="form-group">
-								<textarea name="review" rows="10" class="form-control" placeholder="Your review"><%= review.text%></textarea>
+								<textarea name="text" id="textPolje" rows="10" class="form-control"
+									placeholder="Your review"><%= review.text%></textarea>
 							</div>
 							<div class="form-group">
-								<input type="submit" value="Submit Review" class="btn btn-dark btn-block" />
+								<input value="Submit Review" class="btn btn-dark btn-block" id="noveVrijednosti" />
 							</div>
 						</form>
 					</div>
@@ -66,6 +56,58 @@
 			</div>
 		</div>
 	</section>
+
+	<script>
+		const labelRating = document.getElementById('labelRating')
+		const title = document.getElementById('title')
+		const textPolje = document.getElementById('textPolje')
+		const rating = document.getElementById('rating')
+		const spanValue = document.getElementById('spanValue')
+
+		rating.addEventListener('change', e=>{
+				spanValue.textContent = e.target.value
+		})
+
+		document.getElementById("noveVrijednosti").addEventListener('click', e => {
+			e.preventDefault()
+			try {
+				update = {
+					"title": title.value,
+					"text": textPolje.value,
+					"rating": spanValue.textContent
+				}
+
+				posaljiPodatak(update);
+				console.log('POST JE uspio');
+			} catch (error) {
+				console.log(error);
+			}
+
+		});
+
+
+		const posaljiPodatak = async (update) => {
+			const data = {
+				userId: 11,
+				id: 2,
+				title: 'coding task',
+				completed: false
+			}
+
+			console.log(`/api/v1/reviews/<%= review._id %>`);
+
+			await fetch(`/api/v1/reviews/<%= review._id %>`, {
+				method: 'PUT',
+				body: JSON.stringify(update),
+				headers: {
+					//type of data
+					'Content-type': 'application/json; charset=UTF-8'
+				}
+			});
+		};
+
+
+	</script>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
