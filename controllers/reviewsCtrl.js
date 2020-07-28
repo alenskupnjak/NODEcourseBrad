@@ -31,6 +31,7 @@ exports.getReviews = async (req, res, next) => {
         user: 'ne',
         count: reviews.length,
         reviews: reviews,
+        userMenu: req.korisnik
       });
 
     } else {
@@ -41,7 +42,8 @@ exports.getReviews = async (req, res, next) => {
         success: true,
         user: 'ne',
         reviews: res.advancedResults.data,
-        port: `${req.protocol}://${req.get('host')}`
+        port: `${req.protocol}://${req.get('host')}`,
+        userMenu: req.korisnik
       });
     }
   } catch (error) {
@@ -76,6 +78,7 @@ exports.getReview = async (req, res, next) => {
     res.status(201).render('review-edit',{
       success: true,
       review: review,
+      userMenu: req.korisnik
     });
   } catch (error) {
     console.log('review= '.red, error);
@@ -109,11 +112,11 @@ exports.addReview = async (req, res, next) => {
 
     const review = await Review.create(req.body);
 
-
     
     res.status(201).render('index',{
       success: true,
       bootcamps: res.advancedResults,
+      userMenu: req.korisnik
     });
   } catch (error) {
     console.log(error);
@@ -151,6 +154,7 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: review,
+    userMenu: req.korisnik
   });
 });
 
@@ -178,6 +182,7 @@ exports.deleteReview = async (req, res, next) => {
     res.status(200).json({
       success: true,
       poruka: 'Review obrisan!',
+      userMenu: req.korisnik
     });
   } catch (error) {
     next(new ErrorResponse(error, 404));

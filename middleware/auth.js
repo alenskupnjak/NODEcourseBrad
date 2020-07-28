@@ -8,7 +8,7 @@ const colors = require('colors');
 exports.protect = async (req, res, next) => {
   let token;
   console.log(
-    'Vrijednost Autorizavije=',
+    'Vrijednost Autorizacije=',
     colors.bgRed(req.headers.authorization)
   );
 
@@ -36,6 +36,10 @@ exports.protect = async (req, res, next) => {
     // ovaj user se koristi dalje u programu
     req.user = await User.findById(decoded.id);
 
+    req.korisnik = req.user.role
+    console.log(req.user);
+    console.log('Ovdje je korisnik******', req.korisnik);
+
     next();
   } catch (err) {
     return next(
@@ -44,28 +48,13 @@ exports.protect = async (req, res, next) => {
   }
 };
 
-// Grant access to specific roles
-exports.authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      console.log('roles**********'.yellow, roles);
-      return next(
-        new ErrorResponse(
-          `User role ${req.user.role} is not authorized to access this route`,
-          403
-        )
-      );
-    }
-    next();
-  };
-};
-
+//
 // Grant access to specific roles
 exports.authorizeKorisnik = (...roles) => {
   return (req, res, next) => {
     console.log('roles**********'.bgRed, roles, req.user.role);
     if (roles.includes(req.user.role)) {
-      // User je ovlašten, nastavlja sa radom
+      // User je ovlašten, nastavljamo sa radom
       return next();
     }
     // Korisnik nije ovlašten za ovu stazi

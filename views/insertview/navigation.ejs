@@ -10,10 +10,16 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
-            <i class="fas fa-user"></i> Account
+            <i class="fas fa-user"></i> Account <%= userMenu%>
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/api/v1/view/manage-bootcamp">Manage Bootcamp</a>
+
+            <% if( userMenu === 'user') { %>
+              <a class="dropdown-item disabled-menu" href="/api/v1/view/manage-bootcamp" >Manage Bootcamp</a>
+						<% } else{ %>
+              <a class="dropdown-item" href="/api/v1/view/manage-bootcamp" >Manage Bootcamp</a>
+						<% } %>
+
             <a class="dropdown-item" href="/api/v1/reviews">Manage Reviews</a>
             <a class="dropdown-item" href="/api/v1/view/manage-account">Manage Account</a>
             <div class="dropdown-divider"></div>

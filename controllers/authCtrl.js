@@ -16,11 +16,13 @@ exports.register = async (req, res, next) => {
     const { name, email, password, password2, role } = req.body;
 
     if (password !== password2) {
-      return next(new ErrorResponse('Upisani passwordi se ne podudaraju.', 400));
+      return next(
+        new ErrorResponse('Upisani passwordi se ne podudaraju.', 400)
+      );
     }
-    
-    const userProvjera = await User.findOne({email: email})
-    
+
+    const userProvjera = await User.findOne({ email: email });
+
     if (userProvjera !== null) {
       return next(new ErrorResponse('Takav korisnik već postoji', 400));
     }
@@ -31,9 +33,9 @@ exports.register = async (req, res, next) => {
       password,
       role,
     });
-      
+
     //šaljemo token
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 200, res, req);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -56,28 +58,22 @@ exports.login = async (req, res, next) => {
     // Check for user
     const user = await User.findOne({ email: email }).select('+password');
 
-
     // ako nema usera u bazi javlja grešku
     if (!user) {
       return next(new ErrorResponse('Invalid Credentials', 401));
-    } else {
-      console.log('Pronašao sam Usera'.green);
-    }
+    } 
 
     // Check if password matches
     const isMatch = await user.matchPassword(password);
 
     if (!isMatch) {
       return next(new ErrorResponse('Invalid password', 401));
-    } else {
-      console.log('Provjerio sam password i on je OK.'.green);
-    }
+    } 
 
     // svi uvijet zadovoljeni, logiramo se, šaljemo token
-    console.log('-----------------------', req.body);
     user.postmanLogin = req.body.postmanLogin;
 
-    sendTokenResponse(user, 200, res);
+    sendTokenResponse(user, 200, res, req);
   } catch (error) {
     return next(new ErrorResponse(error, 400));
   }
@@ -144,6 +140,7 @@ exports.updateUserDetails = async (req, res, next) => {
       pageTitle: 'Manage-account',
       data: res.advancedResults,
       user: req.user,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(error, 400));
@@ -241,6 +238,7 @@ exports.forgotpassword = async (req, res, next) => {
         pageTitle: 'Check email',
         data: 'Email sent',
         email: req.body.email,
+        userMenu: req.korisnik
       });
     } catch (error) {
       console.log(error);
@@ -339,6 +337,7 @@ exports.getResetPassword = async (req, res, next) => {
       pageTitle: 'Reset password',
       resettoken: req.params.resettoken,
       user: user,
+      userMenu: req.korisnik
     });
   } catch (error) {
     next(new ErrorResponse('Invalid token xxxx', 400));
@@ -348,11 +347,12 @@ exports.getResetPassword = async (req, res, next) => {
 ////////////////////////////////////////////////////////////////
 //TOKEN
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
-
+const sendTokenResponse = (user, statusCode, res, req) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
+
+  console.log('A korisnik je ...', req.korisnik);
 
   const options = {
     expires: new Date(
@@ -365,10 +365,9 @@ const sendTokenResponse = (user, statusCode, res) => {
     console.log('production'.green);
     options.secure = true;
   }
-  
-  
+
   // ako upit dolazi iz postmana Postman dobiva svoj token, a HTML svoj token
-  if (user.postmanLogin) {    
+  if (user.postmanLogin) {
     res.status(statusCode).cookie('token', token, options).json({
       success: true,
       token: token,
@@ -381,6 +380,7 @@ const sendTokenResponse = (user, statusCode, res) => {
       token: token,
       user: user,
       postmanLogin: user.postmanLogin,
+      userMenu: req.korisnik
     });
   }
 };

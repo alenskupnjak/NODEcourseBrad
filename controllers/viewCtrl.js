@@ -10,6 +10,7 @@ exports.getIndex = (req, res, next) => {
 
     res.status(200).render('index', {
       pageTitle: 'Check out',
+      userMenu: req.korisnik
       // data: res.advancedResults
     });
   } catch (error) {
@@ -27,6 +28,7 @@ exports.login = (req, res, next) => {
 
     res.status(200).render('login', {
       pageTitle: 'Login',
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`xxxxx ed to update this bootcamp`, 401));
@@ -44,6 +46,7 @@ exports.register = (req, res, next) => {
     res.status(200).render('register', {
       pageTitle: 'Check out',
       data: res.advancedResults,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod registriranja`, 401));
@@ -61,6 +64,7 @@ exports.forgotpassword = (req, res, next) => {
     res.status(200).render('reset-password-mail', {
       pageTitle: 'Reset password',
       data: res.advancedResults,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod registriranja`, 401));
@@ -81,6 +85,7 @@ exports.manageBootcamp = (req, res, next) => {
     res.status(200).render('manage-bootcamp', {
       pageTitle: 'Manage Bootcamp',
       data: res.advancedResults,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod registriranja`, 401));
@@ -97,6 +102,7 @@ exports.manageAccount = (req, res, next) => {
       pageTitle: 'Manage-account',
       data: res.advancedResults,
       user: req.user,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod registriranja`, 401));
@@ -112,6 +118,7 @@ exports.updatePassword = (req, res, next) => {
     res.status(200).render('update-password', {
       pageTitle: 'update-password',
       data: res.advancedResults,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod updatePassword`, 401));
@@ -130,6 +137,7 @@ exports.addReview = (req, res, next) => {
       review: res.advancedResults,
       user: req.user,
       id: req.params.id,
+      userMenu: req.korisnik
     });
   } catch (error) {
     return next(new ErrorResponse(`Greška kod addReview` + error, 401));
@@ -147,6 +155,7 @@ exports.postError = (req, res, next) => {
     res.status(200).render('error', {
       error: req.body.error,
       statuscode: req.body.statuscode,
+      userMenu: req.korisnik
     });
 
     // location.assign(`/api/v1/view/error`);

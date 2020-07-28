@@ -49,7 +49,7 @@
 									<td>
 										<a href="" class="btn btn-secondary edit" id="<%= data._id %>"><i class="fas fa-pencil-alt"></i></a>
 
-										<a href="" class="btn btn-danger brisi" id="<%= data._id %>"><i class="fas fa-times"></i></a>
+										<a href="" class="btn btn-danger brisi" id="<%= data._id %>"><i class="fas fa-times"></i></a>		
 
 										<!-- <button class="btn btn-danger">
 											<i class="fas fa-times"></i><a href="add-review.html"></a>
@@ -108,18 +108,13 @@
 				if (deleteResponse.status === 401) {
 					console.log('Delete Nije uspio', deleteResponse);
 
-					location.assign(`/api/v1/view/errorNemaOvlasti`)
-
-					console.log('*****');
-					
+					location.assign(`/api/v1/view/errorNemaOvlasti`)					
 
 					errorData = {
 						"error": " Greška kod slanja",
 						"statuscode": 111
 					}
 					const vidiGresku =  posaljiGresku(errorData);
-
-					console.log('Vidi gresku=', vidiGresku);
 					
 					// window.location.reload(true)
 				}
@@ -129,7 +124,7 @@
 		};
 
 		const posaljiGresku = async (errorData) => {
-			 return await fetch(`/api/v1/view/error`, {
+			 return await fetch(`<%= port %>/api/v1/view/error`, {
 				method: 'POST',
 				body: JSON.stringify(errorData),
 				headers: {

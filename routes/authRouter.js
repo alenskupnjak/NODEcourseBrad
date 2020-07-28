@@ -7,7 +7,7 @@ const router = express.Router();
 // štiti SVE rute odavde nadalje od neulogiranih usera
 const { protect } = require('../middleware/auth');
 
-// dohvati sve
+// PATH /api/v1/auth
 router.route('/register').post(authController.register);
 router.route('/login').post(authController.login);
 router.get('/logout', authController.logout);

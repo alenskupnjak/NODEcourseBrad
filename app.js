@@ -34,6 +34,8 @@ const viewRouter = require('./routes/viewRouter');
 //inicijalizacija aplikacije
 const app = express();
 
+console.log(colors.bgRed( 'START START START'));
+
 // definiramo template engine koji cemo koristiti u aplikaciji (EJS ili PUG ili express-handlebars)
 // app.set('view engine', 'pug'); // za pug
 app.set('view engine', 'ejs'); // za ejs
@@ -52,7 +54,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE, pokusni
-// app.use(logger);
+app.use(logger);
 
 // Dev logging middleware
 if (process.env.NODE_ENV === 'development') {

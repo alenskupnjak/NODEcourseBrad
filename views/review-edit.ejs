@@ -48,7 +48,7 @@
 									placeholder="Your review"><%= review.text%></textarea>
 							</div>
 							<div class="form-group">
-								<input value="Submit Review" class="btn btn-dark btn-block" id="noveVrijednosti" />
+								<input type="submit" value="Submit Review" class="btn btn-dark btn-block" id="noveVrijednosti" />
 							</div>
 						</form>
 					</div>
@@ -76,6 +76,8 @@
 					"text": textPolje.value,
 					"rating": spanValue.textContent
 				}
+				console.log(update);
+				
 
 				posaljiPodatak(update);
 				console.log('POST JE uspio');
@@ -87,9 +89,8 @@
 
 
 		const posaljiPodatak = async (update) => {
-
 			await fetch(`/api/v1/reviews/<%= review._id %>`, {
-				method: 'POST',
+				method: 'PUT',
 				body: JSON.stringify(update),
 				headers: {
 					//type of data

@@ -13,7 +13,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   // res.status(200).json(res.advancedResults);
   const podaci = res.advancedResults.data;
 
-  console.log(podaci);
+  console.log(req.korisnik, req.naStartuDefiniramVarijablu);
 
   podaci.forEach((data) => {
     console.log(data.name);
@@ -22,15 +22,8 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   res.render('bootcamps', {
     pageTitle: 'Get Botcamps',
     bootcamps: res.advancedResults.data,
+    userMenu: req.korisnik,
   });
-});
-
-// @desc      Get all  data bootcamps
-// @route     GET /api/v1/bootcamps/data
-// @access    Public
-exports.getBootcampsData = asyncHandler(async (req, res, next) => {
-  console.log('getBootcampsData'.magenta, req.user, res.proba);
-  res.status(200).json(res.advancedResults);
 });
 
 //
@@ -53,7 +46,6 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   var result = Object.keys(bootCamp).map((key) => [String(key), bootCamp[key]]);
   console.log(colors.blue.inverse(result));
 
-
   // res.status(200).json({
   //   sucess: true,
   //   msg: `Prikaži ${req.params.id}`,
@@ -64,6 +56,7 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
     msg: `Prikaži ${req.params.id}`,
     bootCamp: bootCamp,
     boot: JSON.stringify(bootCamp),
+    userMenu: req.korisnik,
   });
 });
 
@@ -195,6 +188,7 @@ exports.deleteBootcamp = async (req, res, next) => {
 // @access    Private
 exports.getBootcampsInRadius = async (req, res, next) => {
   try {
+    console.log('-----------xxxxxxx--------');
     let zipcode;
     let miles;
     console.log(req.params, req.body);
@@ -208,7 +202,6 @@ exports.getBootcampsInRadius = async (req, res, next) => {
       zipcode = req.body.zipcode;
       miles = req.body.miles;
     }
-    console.log('-------------------');
 
     console.log(zipcode, miles);
 
@@ -252,6 +245,7 @@ exports.getBootcampsInRadius = async (req, res, next) => {
       doma: doma,
       pageTitle: 'Get Botcamps',
       bootcamps: bootcamps,
+      userMenu: req.korisnik,
     });
   } catch (error) {
     next(new ErrorResponse(`Geografija ${error}`, 400));
