@@ -7,7 +7,10 @@ const colors = require('colors');
 // Protect routes
 exports.protect = async (req, res, next) => {
   let token;
-  console.log(colors.bgRed( req.headers.authorization ));
+  console.log(
+    'Vrijednost Autorizavije=',
+    colors.bgRed(req.headers.authorization)
+  );
 
   if (
     req.headers.authorization &&
@@ -27,16 +30,12 @@ exports.protect = async (req, res, next) => {
   }
 
   try {
-    
-    // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id
+    // Verify token, usporeduje sa dobivenim tokenom i sekret ključem, vraca id korisnika
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded);
-    
+
     // ovaj user se koristi dalje u programu
     req.user = await User.findById(decoded.id);
-    console.log('---------------------');
-    
-    console.log(req.user);
+
     next();
   } catch (err) {
     return next(

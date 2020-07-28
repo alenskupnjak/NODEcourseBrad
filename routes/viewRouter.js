@@ -26,7 +26,7 @@ router
 router
   .route('/manage-account')
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.manageAccount);
-  
+
 router
   .route('/update-password')
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.updatePassword);
@@ -36,8 +36,13 @@ router
   .post(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview)
   .get(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.addReview);
 
-  router
+router
   .route('/error')
-  .post(protect, advancedResults(Bootcamp, 'courses'), viewCtrl.postError)
+  .get(protect, viewCtrl.postError)
+  .post(protect, viewCtrl.postError);
+
+  router
+  .route('/errorNemaOvlasti')
+  .get(protect, viewCtrl.errorNemaOvlasti)
 
 module.exports = router;

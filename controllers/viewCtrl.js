@@ -118,7 +118,6 @@ exports.updatePassword = (req, res, next) => {
   }
 };
 
-
 // @desc      Upravljanje
 // @route     POST /api/v1/view/add-reviews/:id
 // @access    Public
@@ -129,29 +128,41 @@ exports.addReview = (req, res, next) => {
     res.status(200).render('review-add', {
       pageTitle: 'Add reviews',
       review: res.advancedResults,
-      user:req.user,
-      id :req.params.id
+      user: req.user,
+      id: req.params.id,
     });
   } catch (error) {
-    return next(new ErrorResponse(`Greška kod addReview`+error, 401));
+    return next(new ErrorResponse(`Greška kod addReview` + error, 401));
   }
 };
-
 
 // @desc      Prikazivanje grešaka
 // @route     POST /api/v1/view/error
 // @access    Public
 exports.postError = (req, res, next) => {
   try {
-    console.log('tutututut');
-    console.log(req.user);
+    console.log('---- postError ----', req.body);
+    console.log(req.body.error, req.body.statuscode);
+    // console.log(req);
     res.status(200).render('error', {
-      pageTitle: 'Add reviews',
-      review: res.advancedResults,
-      user:req.user,
-      id :req.params.id
+      error: req.body.error,
+      statuscode: req.body.statuscode,
     });
+
+    // location.assign(`/api/v1/view/error`);
   } catch (error) {
-    return next(new ErrorResponse(`Greška kod addReview`+error, 401));
+    return next(new ErrorResponse(`Greška kod  postError` + error, 401));
+  }
+};
+
+// @desc      Prikazivanje grešaka
+// @route     GET /api/v1/view/errorNemaOvlasti
+// @access    Public
+exports.errorNemaOvlasti = (req, res, next) => {
+  try {
+    console.log('---- errorNemaOvlasti ----');
+    res.status(200).render('error-nemate-ovlasti', {});
+  } catch (error) {
+    return next(new ErrorResponse(`errorNemaOvlasti` + error, 401));
   }
 };

@@ -89,11 +89,11 @@
 		const posaljiPodatak = async (update) => {
 
 			await fetch(`/api/v1/reviews/<%= review._id %>`, {
-				method: 'PUT',
+				method: 'POST',
 				body: JSON.stringify(update),
 				headers: {
 					//type of data
-					'Content-type': 'application/json; charset=UTF-8'
+					'Content-Type': 'application/json; charset=UTF-8'
 				}
 			});
 		};

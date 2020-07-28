@@ -75,12 +75,11 @@
 				return data
 			})
 
-			console.log(zapis);
+			// console.log(zapis);
 
 			let id;
 			zapis.forEach((data, index) => {
-
-				if (index < zapis.length - 2) {					
+				if (index < zapis.length - 2) {
 					if (data.classList.contains('edit')) {
 						id = data.getAttribute("id")
 						getOneReview(data.getAttribute("id"))
@@ -91,27 +90,52 @@
 					if (data.classList.contains('brisi')) {
 						console.log('tutut', data.getAttribute("id"));
 						deleteData(data.getAttribute("id"))
-						refreshPage()
+						// refreshPage()
 					}
-
 				}
 			})
-
 		})
 
 
 		const deleteData = async (id) => {
 			try {
 				console.log('link=', `<%= port %>/api/v1/reviews/${id}`);
-				
-				await fetch(`<%= port %>/api/v1/reviews/${id}`, {
+
+				const deleteResponse = await fetch(`<%= port %>/api/v1/reviews/${id}`, {
 					method: 'DELETE',
 				});
-				console.log('Delete JE uspio');
+
+				if (deleteResponse.status === 401) {
+					console.log('Delete Nije uspio', deleteResponse);
+
+					location.assign(`/api/v1/view/errorNemaOvlasti`)
+
+					console.log('*****');
+					
+
+					errorData = {
+						"error": " Greška kod slanja",
+						"statuscode": 111
+					}
+					const vidiGresku =  posaljiGresku(errorData);
+
+					console.log('Vidi gresku=', vidiGresku);
+					
+					// window.location.reload(true)
+				}
 			} catch (error) {
-				console.log(error);
-				
+				console.log(' deleteData=', error);
 			}
+		};
+
+		const posaljiGresku = async (errorData) => {
+			 return await fetch(`/api/v1/view/error`, {
+				method: 'POST',
+				body: JSON.stringify(errorData),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8'
+				},
+			});
 		};
 
 		const refreshPage = async (id) => {
