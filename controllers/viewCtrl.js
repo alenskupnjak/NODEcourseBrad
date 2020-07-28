@@ -23,9 +23,6 @@ exports.getIndex = (req, res, next) => {
 // @access    Public
 exports.login = (req, res, next) => {
   try {
-    console.log('viewCtrl, bootcampCtrl.js'.magenta, req.user, res.proba);
-    //  res.status(200).json(res.advancedResults);
-
     res.status(200).render('login', {
       pageTitle: 'Login',
       userMenu: req.korisnik

@@ -352,7 +352,7 @@ const sendTokenResponse = (user, statusCode, res, req) => {
     expiresIn: process.env.JWT_EXPIRE,
   });
 
-  console.log('A korisnik je ...', req.korisnik);
+  console.log('Trenutni korisnik je ...', req.korisnik);
 
   const options = {
     expires: new Date(

@@ -108,7 +108,6 @@ const PORT = process.env.PORT || 5500;
 // prati zahtijeve koji stizu
 const server = app.listen(PORT, () => {
   console.log(`App listening on port ${process.env.PORT}`.blue);
-  console.log(colors.blue(process.env.NODE_ENV));
 });
 
 // zatvar program

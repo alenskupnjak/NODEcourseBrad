@@ -38,8 +38,6 @@ const ReviewSchema = new mongoose.Schema({
 
 // Static method to get avg rating and save
 ReviewSchema.statics.getAverageRating = async function (bootcampId) {
-  console.log(bootcampId);
-
   const obj = await this.aggregate([
     {
       // match je funkcija koja iscitava podatak iz query a

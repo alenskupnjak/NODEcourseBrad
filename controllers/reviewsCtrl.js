@@ -18,37 +18,39 @@ exports.getReviews = async (req, res, next) => {
         select: 'name description email',
       });
 
+      // ako ima zapisa šaljem review na ispise
+      if (reviews[0]) {
+        res.status(200).render('reviews', {
+          success: true,
+          count: reviews.length,
+          reviews: reviews,
+          userMenu: req.korisnik,
+        });
+      } else {
 
-          // res.status(200).json({
-          //   success: true,
-          //   user: 'ne',
-          //   count: reviews.length,
-          //   reviews: reviews,
-          // });
-
-      res.status(200).render('reviews', {
-        success: true,
-        user: 'ne',
-        count: reviews.length,
-        reviews: reviews,
-        userMenu: req.korisnik
-      });
-
+        res.status(200).render('reviews', {
+          link: `/api/v1/view/add-reviews/${req.params.bootcampId}`,
+          userMenu: req.korisnik,
+          reviews: reviews,
+        });
+      }
     } else {
       // console.log(colors.green(res.advancedResults));
       // res.status(200).json(res.advancedResults.data);
 
       res.status(200).render('manage-reviews', {
         success: true,
-        user: 'ne',
         reviews: res.advancedResults.data,
         port: `${req.protocol}://${req.get('host')}`,
-        userMenu: req.korisnik
+        userMenu: req.korisnik,
       });
     }
   } catch (error) {
     next(
-      new ErrorResponse(`No review found with the id of ${req.params.id}`, 404)
+      new ErrorResponse(
+        `No review found with the id of ${req.params.bootcampId}`,
+        404
+      )
     );
   }
 };
@@ -74,15 +76,13 @@ exports.getReview = async (req, res, next) => {
       );
     }
     console.log(review);
-    
-    res.status(201).render('review-edit',{
+
+    res.status(201).render('review-edit', {
       success: true,
       review: review,
-      userMenu: req.korisnik
+      userMenu: req.korisnik,
     });
   } catch (error) {
-    console.log('review= '.red, error);
-
     return next(
       new ErrorResponse(`No review found with the id of ${req.params.id}`, 404)
     );
@@ -96,9 +96,7 @@ exports.addReview = async (req, res, next) => {
   try {
     req.body.bootcamp = req.params.bootcampId;
     req.body.user = req.user.id;
-    console.log(req.body.bootcamp);
-    console.log(res.advancedResults);
-    
+
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
     if (!bootcamp) {
@@ -110,13 +108,13 @@ exports.addReview = async (req, res, next) => {
       );
     }
 
-    const review = await Review.create(req.body);
+    console.log(res.advancedResults);
 
-    
-    res.status(201).render('index',{
+    const review = await Review.create(req.body);
+    res.status(201).render('index', {
       success: true,
       bootcamps: res.advancedResults,
-      userMenu: req.korisnik
+      userMenu: req.korisnik,
     });
   } catch (error) {
     console.log(error);
@@ -129,11 +127,6 @@ exports.addReview = async (req, res, next) => {
 // @access    Private
 exports.updateReview = asyncHandler(async (req, res, next) => {
   let review = await Review.findById(req.params.id);
-
-  console.log(colors.red.inverse('-------------ajmooooo  vvv-------------'));
-  console.log(req.body);
-
-  
 
   if (!review) {
     return next(
@@ -154,7 +147,7 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     data: review,
-    userMenu: req.korisnik
+    userMenu: req.korisnik,
   });
 });
 
@@ -182,7 +175,7 @@ exports.deleteReview = async (req, res, next) => {
     res.status(200).json({
       success: true,
       poruka: 'Review obrisan!',
-      userMenu: req.korisnik
+      userMenu: req.korisnik,
     });
   } catch (error) {
     next(new ErrorResponse(error, 404));

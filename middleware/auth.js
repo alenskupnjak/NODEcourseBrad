@@ -7,11 +7,6 @@ const colors = require('colors');
 // Protect routes
 exports.protect = async (req, res, next) => {
   let token;
-  console.log(
-    'Vrijednost Autorizacije=',
-    colors.bgRed(req.headers.authorization)
-  );
-
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
@@ -37,8 +32,6 @@ exports.protect = async (req, res, next) => {
     req.user = await User.findById(decoded.id);
 
     req.korisnik = req.user.role
-    console.log(req.user);
-    console.log('Ovdje je korisnik******', req.korisnik);
 
     next();
   } catch (err) {

@@ -1,8 +1,9 @@
 const ErrorResponse = require('../utils/errorResponse');
+const colors = require('colors');
 
 
 const errorHandlerSvi = (err, req, res, next) => {
-  console.log('U errorHandlerSvi sam'.green);
+  console.log('*** errorHandlerSvi sam ***'.bgRed);
   
   console.log('err.name=',err.name,'err.code=', err.code);
 

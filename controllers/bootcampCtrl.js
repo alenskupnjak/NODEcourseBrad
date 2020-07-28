@@ -9,15 +9,8 @@ const colors = require('colors');
 // @route     GET /api/v1/bootcamps
 // @access    Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  console.log('getBootcamps, bootcampCtrl.js'.magenta, req.user, res.proba);
   // res.status(200).json(res.advancedResults);
   const podaci = res.advancedResults.data;
-
-  console.log(req.korisnik, req.naStartuDefiniramVarijablu);
-
-  podaci.forEach((data) => {
-    console.log(data.name);
-  });
 
   res.render('bootcamps', {
     pageTitle: 'Get Botcamps',
@@ -44,7 +37,6 @@ exports.getBootcamp = asyncHandler(async (req, res, next) => {
   }
 
   var result = Object.keys(bootCamp).map((key) => [String(key), bootCamp[key]]);
-  console.log(colors.blue.inverse(result));
 
   // res.status(200).json({
   //   sucess: true,

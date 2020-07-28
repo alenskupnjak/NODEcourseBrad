@@ -18,25 +18,37 @@
 	<%- include('./insertview/navigation.ejs')%>
 
 	<% if(reviews.length === 0){ %>
-		<section class="bootcamp mt-5">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-8">
-
-						<h1 class="mb-4">DevWorks Bootcamp Reviews</h1>
-						<div class="card mb-3">
-							<h5 class="card-header bg-dark text-white"></h5>
-							<div class="card-body">
-								<p class="card-text"> Nema nijednog komentara!</p>
-							</div>
+	<section class="bootcamp mt-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8">
+					<h1 class="mb-4">DevWorks Bootcamp Reviews</h1>
+					<div class="card mb-3">
+						<h5 class="card-header bg-dark text-white"></h5>
+						<div class="card-body">
+							<p class="card-text"> Nema nijednog komentara!</p>
 						</div>
 					</div>
 				</div>
+				<div class="col-md-4">
+					<!-- Rating -->
+					<h1 class="text-center my-4">
+						<span class="badge badge-secondary badge-success rounded-circle p-3">8.8</span>
+						Rating
+					</h1>
+					<!-- Buttons -->
+					<form action="<%= link%>" method="POST">
+						<a href="<%= link%>" class="btn btn-primary btn-block my-3"
+							id="updateReview"><i class="fas fa-pencil-alt"></i> Review This 
+							Bootcamp</a>
+					</form>
+				</div>
 			</div>
-		</section>
+		</div>
+	</section>
 
 
-	<% } else{ %>  
+	<% } else{ %>
 
 	<section class="bootcamp mt-5">
 		<div class="container">
@@ -74,7 +86,6 @@
 							id="updateReview"><i class="fas fa-pencil-alt"></i> Review This
 							Bootcamp</a>
 					</form>
-
 				</div>
 			</div>
 		</div>

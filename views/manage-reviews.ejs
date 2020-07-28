@@ -90,7 +90,7 @@
 					if (data.classList.contains('brisi')) {
 						console.log('tutut', data.getAttribute("id"));
 						deleteData(data.getAttribute("id"))
-						// refreshPage()
+						refreshPage()
 					}
 				}
 			})
@@ -116,7 +116,7 @@
 					}
 					const vidiGresku =  posaljiGresku(errorData);
 					
-					// window.location.reload(true)
+					window.location.reload(true)
 				}
 			} catch (error) {
 				console.log(' deleteData=', error);
