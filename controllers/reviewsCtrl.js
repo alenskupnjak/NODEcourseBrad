@@ -40,11 +40,17 @@ exports.getReviews = async (req, res, next) => {
 
       console.log(req.protocol,'000000000000000000');
       
+          // // Create reset URL
+    // const resetUrl = `${req.protocol}://${req.get(
+    //   'host'
+    // )}/api/v1/auth/resetpassword/${resetToken}`;
+    console.log(`${req.protocol}://${req.get('host')}------------------`);
+    
 
       res.status(200).render('manage-reviews', {
         success: true,
         reviews: res.advancedResults.data,
-        port: `https://${req.get('host')}`,
+        port: `${req.protocol}://${req.get('host')}`,
         userMenu: req.korisnik,
       });
     }

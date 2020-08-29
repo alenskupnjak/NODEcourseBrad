@@ -47,13 +47,12 @@
 									<td><%= data.title%></td>
 									<td><%= data.rating%></td>
 									<td>
-										<a href="" class="btn btn-secondary edit" id="<%= data._id %>"><i class="fas fa-pencil-alt"></i></a>
-
-										<a href="" class="btn btn-danger brisi" id="<%= data._id %>"><i class="fas fa-times"></i></a>		
-
-										<!-- <button class="btn btn-danger">
-											<i class="fas fa-times"></i><a href="add-review.html"></a>
-										</button> -->
+										<a href="" class="btn btn-secondary edit" name="edit" id="<%= data._id %>"
+											title="Brisanje iz BackEnda"><i class="fas fa-pencil-alt"></i></a>
+										<a href="" class="btn btn-danger brisi" name="brisi" id="<%= data._id %>"
+											title="Brisanje iz Frontenda"><i class="fas fa-times"></i></a>
+										<button class="btnmoj" type="button" title="Brisanje iz Frontenda"
+											onclick="deleteDataFrontend(this)">DeleteFrontend</button>
 									</td>
 								</tr>
 								<% } %>
@@ -66,13 +65,13 @@
 		</div>
 	</section>
 
-	<script></script>
+	<script src="/js/admin.js"></script>
 	<script>
 
-    // // Create reset URL
-    // const resetUrl = `${req.protocol}://${req.get(
-    //   'host'
-    // )}/api/v1/auth/resetpassword/${resetToken}`;
+		// // Create reset URL
+		// const resetUrl = `${req.protocol}://${req.get(
+		//   'host'
+		// )}/api/v1/auth/resetpassword/${resetToken}`;
 
 		document.getElementById('tabela').addEventListener('click', e => {
 			e.preventDefault()
@@ -106,21 +105,19 @@
 			try {
 				console.log('link=', `<%= port %>/api/v1/reviews/${id}`);
 
-				const deleteResponse = await fetch(`<%= port %>/api/v1/reviews/${id}`, {
-					method: 'DELETE',
-				});
+				const deleteResponse = await fetch(`<%= port %>/api/v1/reviews/${id}`, {method: 'DELETE',});
 
 				if (deleteResponse.status === 401) {
 					console.log('Delete Nije uspio', deleteResponse);
 
-					location.assign(`/api/v1/view/errorNemaOvlasti`)					
+					location.assign(`/api/v1/view/errorNemaOvlasti`)
 
 					errorData = {
 						"error": " Greška kod slanja",
 						"statuscode": 111
 					}
-					const vidiGresku =  posaljiGresku(errorData);
-					
+					const vidiGresku = posaljiGresku(errorData);
+
 					window.location.reload(true)
 				}
 			} catch (error) {
@@ -129,7 +126,7 @@
 		};
 
 		const posaljiGresku = async (errorData) => {
-			 return await fetch(`<%= port %>/api/v1/view/error`, {
+			return await fetch(`<%= port %>/api/v1/view/error`, {
 				method: 'POST',
 				body: JSON.stringify(errorData),
 				headers: {
