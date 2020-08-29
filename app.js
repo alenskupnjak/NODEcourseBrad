@@ -42,13 +42,21 @@ app.set('view engine', 'ejs'); // za ejs
 // kreiramo stazu odakle cemo vuci template
 app.set('views', path.join(__dirname, 'views'));
 
-// Body parser, bez ovoga ne mozemo slati podatke u req.body !!!!!
+// Body parser, bez ovoga ne mozemo slati podatke u req.body , starija verzija!!!!!
 app.use(express.json());
+// isto kao i app.use(express.json());  nova verzija
+app.use(bodyParser.json())
+
+// SETUP Access-Control-Allow-Origin
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // body -parser, bez ovoga ne salje podatke automatski kroz req.body (npm i body-parser)
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(express.json());
 
 // Cookie parser, za slanje TOKENA
 app.use(cookieParser());

@@ -38,10 +38,13 @@ exports.getReviews = async (req, res, next) => {
       // console.log(colors.green(res.advancedResults));
       // res.status(200).json(res.advancedResults.data);
 
+      console.log(req.protocol,'000000000000000000');
+      
+
       res.status(200).render('manage-reviews', {
         success: true,
         reviews: res.advancedResults.data,
-        port: `${req.protocol}://${req.get('host')}`,
+        port: `https://${req.get('host')}`,
         userMenu: req.korisnik,
       });
     }

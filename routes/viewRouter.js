@@ -41,7 +41,7 @@ router
   .get(protect, viewCtrl.postError)
   .post(protect, viewCtrl.postError);
 
-  router
+router
   .route('/errorNemaOvlasti')
   .get(protect, viewCtrl.errorNemaOvlasti)
 

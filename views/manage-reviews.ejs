@@ -66,8 +66,13 @@
 		</div>
 	</section>
 
+	<script></script>
 	<script>
 
+    // // Create reset URL
+    // const resetUrl = `${req.protocol}://${req.get(
+    //   'host'
+    // )}/api/v1/auth/resetpassword/${resetToken}`;
 
 		document.getElementById('tabela').addEventListener('click', e => {
 			e.preventDefault()
@@ -86,7 +91,7 @@
 						console.log('Edit', data.getAttribute("id"));
 					}
 
-					// ako zelim obrisati
+					// Stisnuta je tipka delete
 					if (data.classList.contains('brisi')) {
 						console.log('tutut', data.getAttribute("id"));
 						deleteData(data.getAttribute("id"))

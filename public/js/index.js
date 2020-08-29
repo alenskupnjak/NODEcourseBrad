@@ -1,7 +1,4 @@
-
 import axios from 'axios';
-
-
 
 
 const deleteData = async (id) => {
@@ -10,9 +7,7 @@ const deleteData = async (id) => {
       method: 'DELETE',
       url: `<%= port %>/api/v1/reviews/${id}`,
     });
-    
       showAlert('success', 'Delete JE uspio');
-  
   } catch (error) {
     showAlert('error', 'Update nije uspio');
     console.log(error);
