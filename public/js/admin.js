@@ -10,7 +10,6 @@ const deleteDataFrontend =  (data) => {
   console.log(data.parentNode.querySelector('[name="brisi"]').getAttribute("id"));
 
 
-
   const prodId = data.parentNode.querySelector('[name="brisi"]').getAttribute("id");
   // const csfr = data.parentNode.querySelector('[name="_csrf"]').value;
   const productElement = data.closest('tr')
@@ -28,6 +27,6 @@ const deleteDataFrontend =  (data) => {
      productElement.parentNode.removeChild(productElement)
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err, 'Greška kod brisanja');
     });
 };

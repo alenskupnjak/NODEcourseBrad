@@ -224,12 +224,12 @@ exports.forgotpassword = async (req, res, next) => {
     )}/api/v1/auth/resetpassword/${resetToken}`;
 
     //Poruka za usera
-    const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
+    const message = `Please make a PUT request to: \n\n ${resetUrl} \n <a href="${resetUrl}">Link</a>` ;
 
     try {
       await sendEmail({
         email: user.email,
-        subject: 'Password reset token',
+        subject: 'Password reset token za aplikaciju Kampovi',
         message: message,
       });
 
@@ -241,7 +241,7 @@ exports.forgotpassword = async (req, res, next) => {
         userMenu: req.korisnik
       });
     } catch (error) {
-      console.log(error);
+      return next(new ErrorResponse('Email could not be sent', 500));
     }
   } catch (error) {
     user.resetPasswordToken = undefined;

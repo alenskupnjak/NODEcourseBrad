@@ -10,12 +10,12 @@ const sendEmail = async (options) => {
 
   // create NODEMAILER transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: process.env.SMTP_HOST_MAILTRAP,
+    port: process.env.SMTP_PORT_MAILTRAP,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.SMTP_EMAIL, // generated ethereal user
-      pass:process.env.SMTP_PASSWORD, // generated ethereal password
+      user: process.env.SMTP_EMAIL_MAILTRAP, // generated ethereal user
+      pass:process.env.SMTP_PASSWORD_MAILTRAP, // generated ethereal password
     },
   });
 
